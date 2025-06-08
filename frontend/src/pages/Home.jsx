@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Leaf, Users, Phone, ArrowRight, Star, Heart, Zap, Sparkles, Sun, Droplets } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const JuicePlusHomepage = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -122,7 +123,7 @@ const JuicePlusHomepage = () => {
               <div className="bg-black rounded-full px-12 py-6 relative z-10 group-hover:bg-transparent transition-all duration-500">
                 <span className="text-white group-hover:text-white font-bold text-xl flex items-center space-x-3">
                   <Zap className="h-6 w-6 group-hover:animate-pulse" />
-                  <span>Explore Menu</span>
+                  <Link to="/"><span>Explore Menu</span></Link>                  
                   <ArrowRight className="h-6 w-6 group-hover:translate-x-2 transition-transform" />
                 </span>
               </div>
