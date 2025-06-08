@@ -1,246 +1,358 @@
-import React, { useState, useEffect } from 'react';
-import { Leaf, Menu, Users, Phone, ArrowRight, Star, Heart, Zap } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Leaf, Users, Phone, ArrowRight, Star, Heart, Zap, Sparkles, Sun, Droplets } from 'lucide-react';
 
-const HomePage = () => {
+const JuicePlusHomepage = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [scrollY, setScrollY] = useState(0);
+  const heroRef = useRef(null);
 
   useEffect(() => {
     setIsVisible(true);
+    
+    const handleMouseMove = (e) => {
+      setMousePosition({ 
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100
+      });
+    };
+
+    const handleScroll = () => setScrollY(window.scrollY);
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
-  // Simulated navigation handlers (replace with actual routing)
   const navigateToPage = (page) => {
     console.log(`Navigating to ${page} page`);
-    // Replace with actual navigation logic (e.g., React Router)
   };
 
+  const FloatingOrb = ({ delay = 0, size = 'w-4 h-4', color = 'bg-yellow-400' }) => (
+    <div 
+      className={`absolute ${size} ${color} rounded-full blur-sm opacity-60 animate-pulse`}
+      style={{
+        animationDelay: `${delay}s`,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        animation: `float ${3 + Math.random() * 2}s ease-in-out infinite ${delay}s`
+      }}
+    />
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-orange-50">
-
-
+    <div className="min-h-screen bg-black overflow-hidden relative">
+      {/* Animated Background */}
+      {/* <div className="fixed inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-purple-500/10 to-orange-500/20 transition-all duration-1000"
+          style={{
+            transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30" />
+      </div> */}
 
       {/* Hero Section */}
-      <section className={`relative overflow-hidden py-20 lg:py-32 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-        <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 via-yellow-400/20 to-orange-400/20"></div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-center lg:text-left">
-              <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-                Fresh
-                <span className="bg-gradient-to-r from-green-500 via-yellow-500 to-orange-500 bg-clip-text text-transparent block">
-                  Natural
-                </span>
-                Delicious
-              </h1>
-              
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0">
-                Experience the pure taste of nature with our handcrafted fruit juices and smoothies. 
-                Made fresh daily with the finest organic ingredients.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button 
-                  onClick={() => navigateToPage('menu')}
-                  className="group bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
-                >
-                  <span>Explore Menu</span>
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </button>
-                
-                <button className="border-2 border-green-500 text-green-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-green-500 hover:text-white transition-all duration-300">
-                  Order Now
-                </button>
-              </div>
-            </div>
-            
-            {/* Hero Image/Illustration */}
-            <div className="relative">
-              <div className="bg-gradient-to-br from-yellow-200 via-orange-200 to-red-200 rounded-3xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                <div className="bg-white rounded-2xl p-8 shadow-2xl">
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Fruit Icons as placeholders */}
-                    <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-xl p-6 flex items-center justify-center">
-                      <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center">
-                        <span className="text-2xl">🍓</span>
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl p-6 flex items-center justify-center">
-                      <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
-                        <span className="text-2xl">🍊</span>
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-xl p-6 flex items-center justify-center">
-                      <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
-                        <span className="text-2xl">🥝</span>
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl p-6 flex items-center justify-center">
-                      <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center">
-                        <span className="text-2xl">🫐</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Floating elements */}
-              <div className="absolute -top-4 -right-4 bg-yellow-400 rounded-full p-3 animate-bounce">
-                <Star className="h-6 w-6 text-white" />
-              </div>
-              <div className="absolute -bottom-4 -left-4 bg-green-400 rounded-full p-3 animate-pulse">
-                <Heart className="h-6 w-6 text-white" />
+      <section 
+        ref={heroRef}
+        className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden"
+        style={{ transform: `translateY(${scrollY * 0.1}px)` }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Logo Animation */}
+          <div className={`mb-8 transition-all duration-2000 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+            <div className="relative inline-block">
+              <div className="absolute -inset-4 bg-gradient-to-r from-emerald-600 via-purple-600 to-orange-600 rounded-full blur-xl opacity-30 animate-pulse" />
+              <div className="relative bg-gradient-to-r from-emerald-500 to-orange-500 p-6 rounded-full">
+                <Sparkles className="h-12 w-12 text-white animate-spin" style={{ animationDuration: '8s' }} />
               </div>
             </div>
           </div>
+
+          {/* Main Title with Staggered Animation */}
+          <div className="mb-12">
+            <h1 className="text-8xl lg:text-9xl font-black mb-6 leading-none tracking-tight">
+              {['J', 'U', 'I', 'C', 'E'].map((letter, i) => (
+                <span 
+                  key={i}
+                  className={`inline-block bg-gradient-to-br from-emerald-400 via-purple-400 to-orange-400 bg-clip-text text-transparent transition-all duration-1000 hover:scale-125 cursor-default ${
+                    isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+                  }`}
+                  style={{ 
+                    transitionDelay: `${i * 100}ms`,
+                    textShadow: '0 0 50px rgba(16, 185, 129, 0.3)'
+                  }}
+                >
+                  {letter}
+                </span>
+              ))}
+            </h1>
+            
+            <div className="relative">
+              <h2 className={`text-6xl lg:text-7xl font-bold bg-gradient-to-r from-white via-emerald-200 to-orange-200 bg-clip-text text-transparent transition-all duration-1500 ${
+                isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+              }`}>
+                PLUS
+              </h2>
+              <div className="absolute -top-4 -right-8 text-2xl animate-bounce">✨</div>
+            </div>
+          </div>
+
+          {/* Subtitle */}
+          <p className={`text-2xl lg:text-3xl text-gray-300 mb-16 max-w-4xl mx-auto leading-relaxed transition-all duration-2000 ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          }`}>
+            Where <span className="bg-gradient-to-r from-emerald-400 to-orange-400 bg-clip-text text-transparent font-bold">premium meets pure</span> - 
+            Experience the ultimate fusion of exotic fruits, cutting-edge nutrition, and unparalleled taste
+          </p>
+
+          {/* Interactive CTA Buttons */}
+          <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center transition-all duration-2500 ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          }`}>
+            <button 
+              onClick={() => navigateToPage('menu')}
+              className="group relative bg-gradient-to-r from-emerald-500 via-purple-500 to-orange-500 p-1 rounded-full overflow-hidden transform hover:scale-110 transition-all duration-500"
+            >
+              <div className="bg-black rounded-full px-12 py-6 relative z-10 group-hover:bg-transparent transition-all duration-500">
+                <span className="text-white group-hover:text-white font-bold text-xl flex items-center space-x-3">
+                  <Zap className="h-6 w-6 group-hover:animate-pulse" />
+                  <span>Explore Menu</span>
+                  <ArrowRight className="h-6 w-6 group-hover:translate-x-2 transition-transform" />
+                </span>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-purple-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </button>
+            
+            <button className="group border-2 border-emerald-400 text-emerald-400 px-12 py-6 rounded-full font-bold text-xl hover:bg-emerald-400 hover:text-black transition-all duration-500 transform hover:scale-110 relative overflow-hidden">
+              <span className="relative z-10 flex items-center space-x-2">
+                <Sun className="h-6 w-6 group-hover:rotate-180 transition-transform duration-500" />
+                <span>Order Fresh</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Floating Juice Elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Large Floating Fruits */}
+          <div className="absolute top-20 left-10 text-8xl opacity-20 animate-float">🍊</div>
+          <div className="absolute top-40 right-20 text-6xl opacity-30 animate-float" style={{ animationDelay: '1s' }}>🥭</div>
+          <div className="absolute bottom-32 left-20 text-7xl opacity-25 animate-float" style={{ animationDelay: '2s' }}>🍓</div>
+          <div className="absolute top-60 left-1/2 text-5xl opacity-40 animate-float" style={{ animationDelay: '0.5s' }}>🥝</div>
+          <div className="absolute bottom-20 right-10 text-9xl opacity-15 animate-float" style={{ animationDelay: '1.5s' }}>🫐</div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-white/50 backdrop-blur-sm">
+      {/* Features Section with Glass Morphism */}
+      <section className="relative z-10 py-32 bg-gradient-to-b from-transparent to-black/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Why Choose <span className="text-green-600">FreshJuice</span>?
+          <div className="text-center mb-20">
+            <h2 className="text-6xl lg:text-7xl font-black text-white mb-8">
+              Why Choose 
+              <span className="bg-gradient-to-r from-emerald-400 to-orange-400 bg-clip-text text-transparent block">
+                Juice Plus?
+              </span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We're committed to bringing you the freshest, most nutritious beverages that fuel your body and delight your taste buds.
+            <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              We don't just make juice - we craft liquid perfection that transforms your day
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* About Preview */}
-            <div className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-green-100">
-              <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-full w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Users className="h-8 w-8 text-green-600" />
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* About Preview - Glass Card */}
+            <div className="group relative bg-white/5 backdrop-blur-xl rounded-3xl p-10 border border-white/10 hover:border-emerald-400/50 transition-all duration-700 transform hover:-translate-y-4 hover:scale-105">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-purple-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              
+              <div className="relative z-10">
+                <div className="bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl w-20 h-20 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                  <Users className="h-10 w-10 text-white" />
+                </div>
+                
+                <h3 className="text-3xl font-bold text-white mb-6">Our Legacy</h3>
+                <p className="text-gray-300 mb-8 leading-relaxed text-lg">
+                  Born from a revolutionary vision to redefine what premium juice means. We source exotic fruits from pristine locations worldwide.
+                </p>
+                
+                <button 
+                  onClick={() => navigateToPage('about')}
+                  className="group/btn text-emerald-400 font-bold text-lg flex items-center space-x-3 hover:text-emerald-300 transition-colors"
+                >
+                  <span>Discover Our Story</span>
+                  <ArrowRight className="h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
+                </button>
               </div>
-              
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Story</h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                Founded with a passion for healthy living, we source the finest organic fruits to create beverages that nourish your body and soul.
-              </p>
-              
-              <button 
-                onClick={() => navigateToPage('about')}
-                className="group/btn text-green-600 font-semibold flex items-center space-x-2 hover:text-green-700 transition-colors"
-              >
-                <span>Learn About Us</span>
-                <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-              </button>
             </div>
 
-            {/* Menu Preview */}
-            <div className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-orange-100">
-              <div className="bg-gradient-to-br from-orange-100 to-orange-200 rounded-full w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Zap className="h-8 w-8 text-orange-600" />
+            {/* Menu Preview - Glass Card */}
+            <div className="group relative bg-white/5 backdrop-blur-xl rounded-3xl p-10 border border-white/10 hover:border-orange-400/50 transition-all duration-700 transform hover:-translate-y-4 hover:scale-105">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-pink-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              
+              <div className="relative z-10">
+                <div className="bg-gradient-to-br from-orange-400 to-pink-600 rounded-2xl w-20 h-20 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                  <Droplets className="h-10 w-10 text-white" />
+                </div>
+                
+                <h3 className="text-3xl font-bold text-white mb-6">Liquid Art</h3>
+                <p className="text-gray-300 mb-8 leading-relaxed text-lg">
+                  From molecular gastronomy smoothies to cold-pressed masterpieces. Each drink is a symphony of flavors crafted by juice artisans.
+                </p>
+                
+                <button 
+                  onClick={() => navigateToPage('menu')}
+                  className="group/btn text-orange-400 font-bold text-lg flex items-center space-x-3 hover:text-orange-300 transition-colors"
+                >
+                  <span>View Creations</span>
+                  <ArrowRight className="h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
+                </button>
               </div>
-              
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Fresh Menu</h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                From energizing smoothies to refreshing cold-pressed juices, discover our full range of delicious and nutritious beverages.
-              </p>
-              
-              <button 
-                onClick={() => navigateToPage('menu')}
-                className="group/btn text-orange-600 font-semibold flex items-center space-x-2 hover:text-orange-700 transition-colors"
-              >
-                <span>View Our Menu</span>
-                <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-              </button>
             </div>
 
-            {/* Contact Preview */}
-            <div className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-purple-100">
-              <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-full w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Phone className="h-8 w-8 text-purple-600" />
+            {/* Contact Preview - Glass Card */}
+            <div className="group relative bg-white/5 backdrop-blur-xl rounded-3xl p-10 border border-white/10 hover:border-purple-400/50 transition-all duration-700 transform hover:-translate-y-4 hover:scale-105">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              
+              <div className="relative z-10">
+                <div className="bg-gradient-to-br from-purple-400 to-blue-600 rounded-2xl w-20 h-20 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                  <Phone className="h-10 w-10 text-white" />
+                </div>
+                
+                <h3 className="text-3xl font-bold text-white mb-6">Connect</h3>
+                <p className="text-gray-300 mb-8 leading-relaxed text-lg">
+                  Step into our flagship experience center or reach out to our juice concierge team. Premium service for premium tastes.
+                </p>
+                
+                <button 
+                  onClick={() => navigateToPage('contact')}
+                  className="group/btn text-purple-400 font-bold text-lg flex items-center space-x-3 hover:text-purple-300 transition-colors"
+                >
+                  <span>Get in Touch</span>
+                  <ArrowRight className="h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
+                </button>
               </div>
-              
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Get in Touch</h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                Visit our store, call us for orders, or reach out with any questions. We're here to serve you the best fresh juices in town.
-              </p>
-              
-              <button 
-                onClick={() => navigateToPage('contact')}
-                className="group/btn text-purple-600 font-semibold flex items-center space-x-2 hover:text-purple-700 transition-colors"
-              >
-                <span>Contact Us</span>
-                <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-green-600 via-green-500 to-green-600 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-            Ready to Taste the Difference?
-          </h2>
-          <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of health-conscious customers who have made FreshJuice their go-to destination for premium beverages.
-          </p>
+      {/* Premium CTA Section */}
+      <section className="relative z-10 py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-purple-600 to-orange-600 opacity-90" />
+        <div className="absolute inset-0 bg-black/20" />
+        
+        <div className="relative max-w-5xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <div className="mb-12">
+            <div className="flex justify-center mb-8">
+              {[...Array(5)].map((_, i) => (
+                <Star 
+                  key={i} 
+                  className="h-12 w-12 text-yellow-400 fill-current animate-pulse" 
+                  style={{ animationDelay: `${i * 0.2}s` }}
+                />
+              ))}
+            </div>
+            
+            <h2 className="text-6xl lg:text-7xl font-black text-white mb-8 leading-tight">
+              Ready for the
+              <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+                Ultimate Experience?
+              </span>
+            </h2>
+            
+            <p className="text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Join the exclusive community of taste connoisseurs who demand nothing but extraordinary
+            </p>
+          </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
             <button 
               onClick={() => navigateToPage('menu')}
-              className="bg-white text-green-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-lg"
+              className="group bg-white text-black px-16 py-8 rounded-full font-black text-2xl hover:bg-yellow-300 transform hover:scale-110 transition-all duration-500 shadow-2xl relative overflow-hidden"
             >
-              Order Online
+              <span className="relative z-10 flex items-center space-x-4">
+                <Sparkles className="h-8 w-8 group-hover:animate-spin" />
+                <span>Order Premium</span>
+              </span>
             </button>
+            
             <button 
               onClick={() => navigateToPage('contact')}
-              className="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-green-600 transition-all duration-300"
+              className="group border-4 border-white text-white px-16 py-8 rounded-full font-black text-2xl hover:bg-white hover:text-black transition-all duration-500 transform hover:scale-110"
             >
-              Find Location
+              <span className="flex items-center space-x-4">
+                <Heart className="h-8 w-8 group-hover:animate-pulse" />
+                <span>Visit Us</span>
+              </span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      {/* Premium Footer */}
+      <footer className="relative z-10 bg-black/90 backdrop-blur-xl border-t border-white/10 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="col-span-2">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="bg-gradient-to-r from-green-500 to-orange-500 p-2 rounded-full">
-                  <Leaf className="h-6 w-6 text-white" />
+          <div className="grid lg:grid-cols-4 gap-12">
+            <div className="lg:col-span-2">
+              <div className="flex items-center space-x-4 mb-8">
+                <div className="bg-gradient-to-r from-emerald-500 to-orange-500 p-4 rounded-2xl">
+                  <Sparkles className="h-8 w-8 text-white" />
                 </div>
-                <span className="text-2xl font-bold">FreshJuice</span>
+                <span className="text-4xl font-black bg-gradient-to-r from-emerald-400 to-orange-400 bg-clip-text text-transparent">
+                  Juice Plus
+                </span>
               </div>
-              <p className="text-gray-400 max-w-md">
-                Your destination for fresh, organic, and delicious fruit juices and smoothies. Made with love, served with passion.
+              <p className="text-gray-400 text-lg max-w-md leading-relaxed">
+                Redefining premium beverages through innovation, quality, and an unwavering commitment to extraordinary taste experiences.
               </p>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <div className="space-y-2">
-                <button onClick={() => navigateToPage('about')} className="block text-gray-400 hover:text-white transition-colors">About Us</button>
-                <button onClick={() => navigateToPage('menu')} className="block text-gray-400 hover:text-white transition-colors">Menu</button>
-                <button onClick={() => navigateToPage('contact')} className="block text-gray-400 hover:text-white transition-colors">Contact</button>
+              <h4 className="font-bold text-white text-xl mb-6">Experience</h4>
+              <div className="space-y-4">
+                <button onClick={() => navigateToPage('about')} className="block text-gray-400 hover:text-emerald-400 transition-colors text-lg">Our Story</button>
+                <button onClick={() => navigateToPage('menu')} className="block text-gray-400 hover:text-emerald-400 transition-colors text-lg">Premium Menu</button>
+                <button onClick={() => navigateToPage('contact')} className="block text-gray-400 hover:text-emerald-400 transition-colors text-lg">Contact</button>
               </div>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Hours</h4>
-              <div className="text-gray-400 space-y-1">
-                <p>Mon-Fri: 7AM - 8PM</p>
-                <p>Sat-Sun: 8AM - 9PM</p>
+              <h4 className="font-bold text-white text-xl mb-6">Hours</h4>
+              <div className="text-gray-400 space-y-2 text-lg">
+                <p>Monday - Friday</p>
+                <p className="text-emerald-400 font-semibold">7:00 AM - 9:00 PM</p>
+                <p>Weekend</p>
+                <p className="text-emerald-400 font-semibold">8:00 AM - 10:00 PM</p>
               </div>
             </div>
           </div>
           
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 FreshJuice. All rights reserved.</p>
+          <div className="border-t border-white/10 mt-16 pt-12 text-center">
+            <p className="text-gray-500 text-lg">
+              © 2025 <span className="text-emerald-400 font-semibold">Juice Plus</span>. Crafting liquid perfection.
+            </p>
           </div>
         </div>
       </footer>
+
+      {/* Custom CSS for animations */}
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          33% { transform: translateY(-20px) rotate(5deg); }
+          66% { transform: translateY(-10px) rotate(-5deg); }
+        }
+        
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 };
 
-export default HomePage;
+export default JuicePlusHomepage;
