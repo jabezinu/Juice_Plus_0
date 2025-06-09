@@ -4,7 +4,9 @@ import {
     getMenus,
     getMenuById,
     updateMenu,
-    deleteMenu
+    deleteMenu,
+    getMenusByCategory,
+    createMenuUnderCategory
 } from '../controller/menuController.js';
 
 const router = express.Router();
@@ -23,5 +25,11 @@ router.put('/:id', updateMenu);
 
 // Delete a menu item
 router.delete('/:id', deleteMenu);
+
+// Get all menu items by category
+router.get('/category/:categoryId', getMenusByCategory);
+
+// Create a new menu item under a category
+router.post('/category/:categoryId', createMenuUnderCategory);
 
 export default router;

@@ -53,3 +53,24 @@ export const deleteMenu = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// Get all menu items by category
+export const getMenusByCategory = async (req, res) => {
+    try {
+        const menus = await Menu.find({ category: req.params.categoryId });
+        res.json(menus);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Create a new menu item under a category
+export const createMenuUnderCategory = async (req, res) => {
+    try {
+        const menu = new Menu({ ...req.body, category: req.params.categoryId });
+        await menu.save();
+        res.status(201).json(menu);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
