@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 // Reusable MenuItem component with enhanced mobile design
 const MenuItem = ({ name, description, price, badge, image }) => {
@@ -34,208 +35,53 @@ const MenuItem = ({ name, description, price, badge, image }) => {
 const MenuPage = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeSection, setActiveSection] = useState('Drinks');
+  const [menuItems, setMenuItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fade-in animation on page load
+  // Fetch menu items from backend
   useEffect(() => {
     setIsVisible(true);
+    const fetchMenu = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get('/api/menus');
+        setMenuItems(res.data || []);
+        setError(null);
+      } catch {
+        setError('Failed to load menu.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMenu();
   }, []);
 
   // Function to render the active section
+  const sectionMap = {
+    'Drinks': 'Drink',
+    'Food': 'Food',
+    'Whole Fruits': 'Fruit',
+  };
   const renderSection = () => {
-    switch (activeSection) {
-      case 'Drinks':
-        return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <MenuItem
-              name="Green Goddess"
-              description="Spinach, kale, green apple, cucumber - your daily dose of greens"
-              price="6.99"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Tropical Sunrise"
-              description="Orange, pineapple, mango - taste the sunshine in every sip"
-              price="5.99"
-              image="https://images.unsplash.com/photo-1622597627793-d8e9a0e4a3fb?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Berry Blast"
-              description="Strawberry, blueberry, raspberry - antioxidant powerhouse"
-              price="6.49"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1506617420156-8e4536971650?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Immunity Booster"
-              description="Carrot, ginger, orange, turmeric - fuel your immune system"
-              price="5.49"
-              image="https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Detox Delight"
-              description="Beetroot, apple, lemon, mint - cleanse and refresh naturally"
-              price="5.99"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Peanut Butter Power"
-              description="Banana, peanut butter, almond milk - protein-packed energy"
-              price="7.49"
-              image="https://images.unsplash.com/photo-1638176066666-ffb2f013c7dd?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Mango Magic"
-              description="Mango, coconut water, lime - tropical paradise in a glass"
-              price="5.99"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1605027990121-cbae9cafe2f0?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Watermelon Refresher"
-              description="Watermelon, mint, lime - summer hydration at its finest"
-              price="4.99"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Acai Energy"
-              description="Acai, banana, blueberry, almond milk - superfood energy boost"
-              price="7.99"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1574635174964-65d0dd30b52b?w=400&h=300&fit=crop&auto=format"
-            />
-          </div>
-        );
-      case 'Food':
-        return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <MenuItem
-              name="Acai Bowl"
-              description="Acai base with granola, banana, berries - superfood breakfast"
-              price="8.99"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Avocado Toast"
-              description="Whole grain toast, avocado, chili flakes - simple & nutritious"
-              price="6.49"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Peanut Butter Banana Toast"
-              description="Nut butter, sliced banana, honey - comfort food made healthy"
-              price="5.99"
-              image="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Chia Pudding"
-              description="Chia seeds soaked in almond milk, topped with fruit"
-              price="5.49"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Hummus Wrap"
-              description="Hummus, cucumber, tomato, spinach in a soft tortilla wrap"
-              price="7.49"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1564156081810-0ebea8189019?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Falafel Bowl"
-              description="Falafel, quinoa, hummus, veggies - Mediterranean goodness"
-              price="9.99"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1572441713132-51c75654db73?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Granola Parfait"
-              description="Yogurt, granola, honey, berries - layers of deliciousness"
-              price="5.99"
-              image="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Protein Energy Balls"
-              description="Dates, oats, nut butter, seeds - grab-and-go energy"
-              price="4.99"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Quinoa Salad"
-              description="Quinoa, avocado, chickpeas, lemon dressing - protein packed"
-              price="8.49"
-              badge="Vegan"
-              image="https://images.unsplash.com/photo-1505576391880-b3f9d713dc4f?w=400&h=300&fit=crop&auto=format"
-            />
-          </div>
-        );
-      case 'Whole Fruits':
-        return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <MenuItem
-              name="Banana"
-              description="Perfectly ripe banana - nature's energy bar"
-              price="0.99"
-              image="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Red Apple"
-              description="Crisp red apple - classic and refreshing"
-              price="1.49"
-              image="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Green Apple"
-              description="Tart green apple - perfect for a healthy snack"
-              price="1.49"
-              image="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Orange"
-              description="Juicy orange - packed with vitamin C"
-              price="1.99"
-              image="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Pineapple"
-              description="Fresh cut pineapple - tropical sweetness"
-              price="3.99"
-              image="https://images.unsplash.com/photo-1544806753-6ad5ac882d5d?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Watermelon Slices"
-              description="Refreshing watermelon slices - summer hydration"
-              price="2.99"
-              image="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Grapes"
-              description="Sweet grapes - red or green variety"
-              price="2.99"
-              image="https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Mango"
-              description="Sliced mango - tropical paradise"
-              price="2.99"
-              image="https://images.unsplash.com/photo-1605027990121-cbae9cafe2f0?w=400&h=300&fit=crop&auto=format"
-            />
-            <MenuItem
-              name="Kiwi"
-              description="Fresh cut kiwi - tangy and nutritious"
-              price="1.99"
-              image="https://images.unsplash.com/photo-1585059895524-72359e06133a?w=400&h=300&fit=crop&auto=format"
-            />
-          </div>
-        );
-      default:
-        return null;
-    }
+    if (loading) return <div className="text-center text-gray-500">Loading...</div>;
+    if (error) return <div className="text-center text-red-500">{error}</div>;
+    const filtered = menuItems.filter(item => item.section === sectionMap[activeSection]);
+    if (filtered.length === 0) return <div className="text-center text-gray-400">No items found.</div>;
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {filtered.map((item, idx) => (
+          <MenuItem
+            key={item._id || idx}
+            name={item.name}
+            description={item.description}
+            price={item.price}
+            badge={item.badge}
+            image={item.image}
+          />
+        ))}
+      </div>
+    );
   };
 
   return (
