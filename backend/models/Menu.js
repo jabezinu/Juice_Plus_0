@@ -6,8 +6,8 @@ const menuSchema = new mongoose.Schema({
     price: { type: Number, required: true, min: 0 },
     image: { type: String, trim: true },
     available: { type: Boolean, default: true },
-    badge: { type: String, trim: true, enum: ['new', 'popular', 'recommended', 'vegan', ''] },
-    section: { type: String, required: true, enum: ['drink', 'food', 'fruit'] },
+    badge: { type: String, trim: true, enum: ['New', 'Popular', 'Recommended', 'Vegan', ''] },
+    section: { type: String, required: true, enum: ['Drink', 'Food', 'Fruit'] },
 }, {
     timestamps: true
 });
