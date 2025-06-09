@@ -2,12 +2,15 @@ import express from 'express';
 import dotenv from 'dotenv';
 import employeeRoutes from './routes/employeeRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 import connectDB from './config/db.js';
+import cors from 'cors';
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 
@@ -15,6 +18,8 @@ app.use(express.json());
 app.use('/api/employees', employeeRoutes);
 // Menu API routes
 app.use('/api/menus', menuRoutes);
+// Category API routes
+app.use('/api/categories', categoryRoutes);
 
 // MongoDB connection
 const PORT = process.env.PORT || 5000;
