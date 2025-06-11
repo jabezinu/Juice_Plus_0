@@ -8,11 +8,12 @@ import {
     getMenusByCategory,
     createMenuUnderCategory
 } from '../controller/menuController.js';
+import upload from '../config/multer.js';
 
 const router = express.Router();
 
 // Create a new menu item
-router.post('/', createMenu);
+router.post('/', upload.single('image'), createMenu);
 
 // Get all menu items
 router.get('/', getMenus);
@@ -21,7 +22,7 @@ router.get('/', getMenus);
 router.get('/:id', getMenuById);
 
 // Update a menu item
-router.put('/:id', updateMenu);
+router.put('/:id', upload.single('image'), updateMenu);
 
 // Delete a menu item
 router.delete('/:id', deleteMenu);
@@ -30,6 +31,6 @@ router.delete('/:id', deleteMenu);
 router.get('/category/:categoryId', getMenusByCategory);
 
 // Create a new menu item under a category
-router.post('/category/:categoryId', createMenuUnderCategory);
+router.post('/category/:categoryId', upload.single('image'), createMenuUnderCategory);
 
 export default router;
