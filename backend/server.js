@@ -14,11 +14,9 @@ app.use(cors());
 app.use(express.json());
 
 
-// Employee API routes
+// Employee API routes, Menu API routes, Category API routes
 app.use('/api/employees', employeeRoutes);
-// Menu API routes
 app.use('/api/menus', menuRoutes);
-// Category API routes
 app.use('/api/categories', categoryRoutes);
 
 // MongoDB connection
