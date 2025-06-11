@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const categorySchema = new mongoose.Schema({
-    name: { type: String, required: true, unique: true, enum: ['Drink', 'Food', 'Fruit'] }
+    name: { type: String, required: true, unique: true } 
 }, {
     timestamps: true
 });
