@@ -50,8 +50,11 @@ export const updateMenu = async (req, res) => {
         let imageUrl = req.body.image;
         if (req.file) {
             await new Promise((resolve, reject) => {
-                const stream = cloudinary.uploader.upload_stream((error, result) => {
-                    if (error) return reject(error);
+                const stream = cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
+                    if (error) {
+                        console.error('Cloudinary upload error:', error);
+                        return reject(error);
+                    }
                     imageUrl = result.secure_url;
                     resolve();
                 });
@@ -64,6 +67,7 @@ export const updateMenu = async (req, res) => {
         if (!menu) return res.status(404).json({ message: 'Menu item not found' });
         res.json(menu);
     } catch (error) {
+        console.error('Update menu error:', error);
         res.status(400).json({ message: error.message });
     }
 };
