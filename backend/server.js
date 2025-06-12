@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import employeeRoutes from './routes/employeeRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import ratingRoutes from './routes/ratingRoutes.js';
 import connectDB from './config/db.js';
 import cors from 'cors';
 
@@ -14,10 +16,12 @@ app.use(cors());
 app.use(express.json());
 
 
-// Employee API routes, Menu API routes, Category API routes
+// Employee API routes, Menu API routes, Category API routes, User API routes
 app.use('/api/employees', employeeRoutes);
 app.use('/api/menus', menuRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/ratings', ratingRoutes);
 
 // MongoDB connection
 const PORT = process.env.PORT || 5000;
