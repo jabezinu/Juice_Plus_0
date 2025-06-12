@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, User, Building, Calendar, DollarSign, Star, Search, Filter, Plus, Edit3, Trash2, X, Save, Eye } from 'lucide-react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EmployeeListPage = () => {
   const [employees, setEmployees] = useState([]);
@@ -20,6 +22,7 @@ const EmployeeListPage = () => {
   });
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState("");
+  const [imageFile, setImageFile] = useState(null);
 
   // Fetch employee data from backend API
   useEffect(() => {
@@ -124,12 +127,13 @@ const EmployeeListPage = () => {
         });
         if (response.ok) {
           setEmployees(employees.filter(emp => (emp._id || emp.id) !== (employee._id || employee.id)));
+          toast.success('Employee deleted successfully!');
         } else {
-          alert('Failed to delete employee');
+          toast.error('Failed to delete employee!');
         }
       } catch (error) {
         console.error('Error deleting employee:', error);
-        alert('Error deleting employee');
+        toast.error('Error deleting employee!');
       }
     }
   };
@@ -154,17 +158,31 @@ const EmployeeListPage = () => {
     try {
       const url = modalMode === 'create' ? '/api/employees' : `/api/employees/${selectedEmployee._id || selectedEmployee.id}`;
       const method = modalMode === 'create' ? 'POST' : 'PUT';
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          salary: parseFloat(formData.salary)
-        }),
-      });
+      let response;
+      if (imageFile) {
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('phone', formData.phone);
+        data.append('position', formData.position);
+        data.append('salary', String(formData.salary));
+        data.append('dateHired', formData.dateHired);
+        data.append('image', imageFile);
+        response = await fetch(url, {
+          method,
+          body: data,
+        });
+      } else {
+        response = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...formData,
+            salary: String(formData.salary)
+          }),
+        });
+      }
 
       if (response.ok) {
         const result = await response.json();
@@ -179,13 +197,16 @@ const EmployeeListPage = () => {
         
         setShowModal(false);
         setSelectedEmployee(null);
+        toast.success(modalMode === 'create' ? 'Employee added successfully!' : 'Employee updated successfully!');
       } else {
         const errorText = await response.text();
         setFormError('Failed to save employee: ' + errorText);
+        toast.error('Failed to save employee!');
       }
     } catch (error) {
       setFormError('Error saving employee: ' + error.message);
       console.error('Error saving employee:', error);
+      toast.error('Error saving employee!');
     } finally {
       setFormLoading(false);
     }
@@ -552,16 +573,38 @@ const EmployeeListPage = () => {
                     
                     <div>
                       <label className="block text-sm font-bold text-slate-700 mb-2">
-                        Profile Image URL
+                        Profile Image
                       </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={e => {
+                          setImageFile(e.target.files[0]);
+                          if (e.target.files[0]) {
+                            setFormData(prev => ({ ...prev, image: '' }));
+                          }
+                        }}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300"
+                      />
+                      <div className="text-xs text-gray-400 mt-1">Or paste an image URL below</div>
                       <input
                         type="url"
                         name="image"
                         value={formData.image}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300"
+                        onChange={e => {
+                          setFormData(prev => ({ ...prev, image: e.target.value }));
+                          setImageFile(null);
+                        }}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 mt-1"
                         placeholder="https://example.com/image.jpg"
                       />
+                      {(imageFile || formData.image) && (
+                        <img
+                          src={imageFile ? URL.createObjectURL(imageFile) : formData.image}
+                          alt="Preview"
+                          className="mt-2 w-16 h-16 object-cover rounded-2xl border"
+                        />
+                      )}
                     </div>
                   </div>
                   
@@ -622,6 +665,8 @@ const EmployeeListPage = () => {
           </div>
         </div>
       )}
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };
