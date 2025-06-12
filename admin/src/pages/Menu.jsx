@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2, Edit, Plus, Save, X, AlertTriangle } from 'lucide-react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 // API base URL (adjust if needed)
 const API_BASE = '/api';
@@ -432,14 +433,17 @@ const Menu = () => {
         if (activeCategory?._id === updated._id) {
           setActiveCategory(updated);
         }
+        toast.success('Category updated successfully!');
       } else {
         const newCategory = await api.createCategory(categoryData);
         setCategories(cats => [...cats, newCategory]);
+        toast.success('Category created successfully!');
       }
       setShowCategoryForm(false);
       setEditingCategory(null);
     } catch (error) {
       console.error('Failed to save category:', error);
+      toast.error('Failed to save category!');
     } finally {
       setFormLoading(false);
     }
@@ -467,14 +471,17 @@ const Menu = () => {
       if (editingItem) {
         const updated = await api.updateMenuItem(editingItem._id, itemData, imageFile);
         setMenuItems(items => items.map(item => item._id === updated._id ? updated : item));
+        toast.success('Menu item updated successfully!');
       } else {
         const newItem = await api.createMenuItem(activeCategory._id, itemData, imageFile);
         setMenuItems(items => [...items, newItem]);
+        toast.success('Menu item created successfully!');
       }
       setShowItemForm(false);
       setEditingItem(null);
     } catch (error) {
       console.error('Failed to save menu item:', error);
+      toast.error('Failed to save menu item!');
     } finally {
       setFormLoading(false);
     }
@@ -502,8 +509,10 @@ const Menu = () => {
       }
       setShowDeleteConfirm(false);
       setDeleteTarget(null);
+      toast.success('Deleted successfully!');
     } catch (error) {
       console.error('Failed to delete:', error);
+      toast.error('Failed to delete!');
     } finally {
       setFormLoading(false);
     }
