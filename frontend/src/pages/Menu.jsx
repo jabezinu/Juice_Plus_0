@@ -9,8 +9,16 @@ const MenuPage = () => {
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
+  const [ratings, setRatings] = useState({}); // { menuId: { average, count, userRating } }
+  const [user, setUser] = useState(null); // For demo: get user from localStorage or context
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Fetch user (for demo, from localStorage)
+  useEffect(() => {
+    const u = localStorage.getItem('user');
+    if (u) setUser(JSON.parse(u));
+  }, []);
 
   // Fetch categories and menu items
   useEffect(() => {
@@ -51,6 +59,29 @@ const MenuPage = () => {
     fetchMenu();
   }, [activeCategory]);
 
+  // Fetch ratings for all menu items in the active category
+  useEffect(() => {
+    const fetchRatings = async () => {
+      if (!menuItems.length) return;
+      const newRatings = {};
+      await Promise.all(menuItems.map(async (item) => {
+        try {
+          const res = await axios.get(`/api/ratings/${item._id}`);
+          newRatings[item._id] = {
+            average: res.data.average,
+            count: res.data.count,
+            ratings: res.data.ratings,
+            userRating: res.data.ratings.find(r => r.user === user?._id)
+          };
+        } catch {
+          // ignore error
+        }
+      }));
+      setRatings(newRatings);
+    };
+    fetchRatings();
+  }, [menuItems, user]);
+
   return (
     <div className={`bg-gradient-to-br from-green-50 to-green-100 min-h-screen transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       {/* Simple Hero Section right after navbar */}
@@ -85,6 +116,27 @@ const MenuPage = () => {
                 badge={item.badge}
                 image={item.image}
                 ingredients={item.ingredients || []}
+                menuId={item._id}
+                ratingInfo={ratings[item._id]}
+                user={user}
+                onRate={async (rating, comment) => {
+                  if (!user) return alert('Login to rate');
+                  try {
+                    await axios.post(`/api/ratings/${item._id}`, { rating, comment }, {
+                      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    // Refresh ratings
+                    const res = await axios.get(`/api/ratings/${item._id}`);
+                    setRatings(r => ({ ...r, [item._id]: {
+                      average: res.data.average,
+                      count: res.data.count,
+                      ratings: res.data.ratings,
+                      userRating: res.data.ratings.find(r => r.user === user._id)
+                    }}));
+                  } catch {
+                    alert('Failed to rate');
+                  }
+                }}
               />
             ))}
           </div>
