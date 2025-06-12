@@ -12,7 +12,9 @@ const Navbar = () => {
     { name: 'Home', id: 'home', icon: '🏠', path: '/home' },
     { name: 'Menu', id: 'menu', icon: '🥤', path: '/' },
     { name: 'About', id: 'about', icon: '💫', path: '/about' },
-    { name: 'Contact Us', id: 'contact', icon: '📞', path: '/contact' }
+    { name: 'Contact Us', id: 'contact', icon: '📞', path: '/contact' },
+    { name: 'Register', id: 'register', icon: '📝', path: '/register' },
+    { name: 'Login', id: 'login', icon: '🔑', path: '/login' }
   ];
 
   useEffect(() => {
