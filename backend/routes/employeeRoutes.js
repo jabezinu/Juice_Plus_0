@@ -6,11 +6,12 @@ import {
     updateEmployee,
     deleteEmployee
 } from '../controller/employeeController.js';
+import upload from '../config/multer.js';
 
 const router = express.Router();
 
 // Create a new employee
-router.post('/', createEmployee);
+router.post('/', upload.single('image'), createEmployee);
 
 // Get all employees
 router.get('/', getEmployees);
@@ -19,7 +20,7 @@ router.get('/', getEmployees);
 router.get('/:id', getEmployeeById);
 
 // Update an employee
-router.put('/:id', updateEmployee);
+router.put('/:id', upload.single('image'), updateEmployee);
 
 // Delete an employee
 router.delete('/:id', deleteEmployee);
