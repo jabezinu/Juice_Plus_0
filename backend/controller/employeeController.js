@@ -1,9 +1,21 @@
 import Employee from '../models/Employee.js';
+import cloudinary from '../config/cloudinary.js';
 
 // Create a new employee
 export const createEmployee = async (req, res) => {
     try {
-        const employee = new Employee(req.body);
+        let imageUrl = req.body.image;
+        if (req.file) {
+            await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
+                    if (error) return reject(error);
+                    imageUrl = result.secure_url;
+                    resolve();
+                });
+                stream.end(req.file.buffer);
+            });
+        }
+        const employee = new Employee({ ...req.body, image: imageUrl });
         await employee.save();
         res.status(201).json(employee);
     } catch (error) {
@@ -35,7 +47,20 @@ export const getEmployeeById = async (req, res) => {
 // Update an employee
 export const updateEmployee = async (req, res) => {
     try {
-        const employee = await Employee.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        let imageUrl = req.body.image;
+        if (req.file) {
+            await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
+                    if (error) return reject(error);
+                    imageUrl = result.secure_url;
+                    resolve();
+                });
+                stream.end(req.file.buffer);
+            });
+        }
+        const updateData = { ...req.body };
+        if (imageUrl) updateData.image = imageUrl;
+        const employee = await Employee.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
         if (!employee) return res.status(404).json({ message: 'Employee not found' });
         res.json(employee);
     } catch (error) {
