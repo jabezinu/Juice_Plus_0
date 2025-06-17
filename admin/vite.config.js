@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
     server: {
     proxy: {
-      '/api': 'https://juice-plus-0-backend.onrender.com',
+      '/api': 'https://juice-plus-0-backend-1.onrender.com',
     },
   },
 })
