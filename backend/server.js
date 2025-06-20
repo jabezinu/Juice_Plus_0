@@ -50,5 +50,5 @@ async function connectDB() {
 
 export default async function handler(req, res) {
     await connectDB();
-    app(req, res);
+    app.handle(req, res);
 }
