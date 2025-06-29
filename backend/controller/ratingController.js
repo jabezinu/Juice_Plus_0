@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Rating from '../models/Rating.js';
+import mongoose from 'mongoose';
 
 // Create a new rating
 export const createRating = asyncHandler(async (req, res) => {
@@ -23,11 +24,13 @@ export const getRatingsForMenu = asyncHandler(async (req, res) => {
 export const getAverageRating = asyncHandler(async (req, res) => {
   const { menuId } = req.params;
   const result = await Rating.aggregate([
-    { $match: { menu: require('mongoose').Types.ObjectId(menuId) } },
+    { $match: { menu: new mongoose.Types.ObjectId(menuId) } },
     { $group: { _id: '$menu', avgRating: { $avg: '$stars' }, count: { $sum: 1 } } }
   ]);
   if (result.length === 0) {
     return res.json({ avgRating: 0, count: 0 });
   }
-  res.json(result[0]);
+  // Always return only avgRating and count
+  const { avgRating, count } = result[0];
+  res.json({ avgRating, count });
 });

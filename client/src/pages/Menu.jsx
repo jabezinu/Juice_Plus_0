@@ -10,6 +10,7 @@ const Menu = () => {
   const [menuLoading, setMenuLoading] = useState(false);
   const [rating, setRating] = useState({}); // { [menuId]: value }
   const [ratingMsg, setRatingMsg] = useState({}); // { [menuId]: msg }
+  const [menuRatings, setMenuRatings] = useState({}); // { [menuId]: { avgRating, count } }
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -32,6 +33,20 @@ const Menu = () => {
     try {
       const res = await axios.get(`http://localhost:5001/api/menus/category/${categoryId}`);
       setMenuItems(res.data);
+      // Fetch average ratings for all menu items in parallel
+      const ratings = await Promise.all(
+        res.data.map(async (item) => {
+          try {
+            const ratingRes = await axios.get(`http://localhost:5001/api/rating/menu/${item._id || item.id}/average`);
+            return { id: item._id || item.id, ...ratingRes.data };
+          } catch {
+            return { id: item._id || item.id, avgRating: 0, count: 0 };
+          }
+        })
+      );
+      const ratingsObj = {};
+      ratings.forEach(r => { ratingsObj[r.id] = { avgRating: r.avgRating, count: r.count }; });
+      setMenuRatings(ratingsObj);
     } catch {
       setError('Failed to fetch menu items');
     } finally {
@@ -45,12 +60,29 @@ const Menu = () => {
 
   const submitRating = async (menuId) => {
     if (!rating[menuId]) return;
+    const today = new Date().toISOString().slice(0, 10); // e.g., "2025-06-29"
+    const key = `rated_${menuId}_${today}`;
+    if (localStorage.getItem(key)) {
+      setRatingMsg((prev) => ({ ...prev, [menuId]: 'You have already rated this item today.' }));
+      return;
+    }
     try {
       await axios.post('http://localhost:5001/api/rating', {
         menu: menuId,
         stars: rating[menuId],
       });
       setRatingMsg((prev) => ({ ...prev, [menuId]: 'Thank you for rating!' }));
+      localStorage.setItem(key, 'true');
+      // Refresh average rating for this menu item
+      try {
+        const ratingRes = await axios.get(`http://localhost:5001/api/rating/menu/${menuId}/average`);
+        setMenuRatings((prev) => ({
+          ...prev,
+          [menuId]: { avgRating: ratingRes.data.avgRating, count: ratingRes.data.count }
+        }));
+      } catch {
+        // Optionally handle error
+      }
     } catch {
       setRatingMsg((prev) => ({ ...prev, [menuId]: 'Failed to submit rating.' }));
     }
@@ -95,6 +127,12 @@ const Menu = () => {
                   <div style={{ fontWeight: 'bold' }}>{item.name}</div>
                   <div>{item.description}</div>
                   <div>Price: ${item.price}</div>
+                  <div>
+                    <span>
+                      Rating: {menuRatings[item._id || item.id]?.avgRating?.toFixed(1) || 'N/A'}
+                      {menuRatings[item._id || item.id]?.count ? ` (${menuRatings[item._id || item.id].count} ratings)` : ''}
+                    </span>
+                  </div>
                   <div style={{ marginTop: '0.5rem' }}>
                     <label>Rate this item: </label>
                     <select
