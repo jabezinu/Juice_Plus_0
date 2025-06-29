@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Menu from './pages/Menu'
+import Manege from './pages/Manege'
 import Navbar from './components/Navbar'
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Menu />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/manage" element={<Manege />} />
       </Routes>      
     </div>
   )

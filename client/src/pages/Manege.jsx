@@ -1,0 +1,186 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const Menu = () => {
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [menuItems, setMenuItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [menuLoading, setMenuLoading] = useState(false);
+  const [rating, setRating] = useState({}); // { [menuId]: value }
+  const [ratingMsg, setRatingMsg] = useState({}); // { [menuId]: msg }
+  const [menuRatings, setMenuRatings] = useState({}); // { [menuId]: { avgRating, count } }
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get('http://localhost:5001/api/categories');
+        setCategories(res.data);
+      } catch {
+        setError('Failed to fetch categories');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const fetchMenuItems = async (categoryId) => {
+    setMenuLoading(true);
+    setMenuItems([]);
+    setSelectedCategory(categoryId);
+    try {
+      const res = await axios.get(`http://localhost:5001/api/menus/category/${categoryId}`);
+      setMenuItems(res.data);
+      // Fetch average ratings for all menu items in parallel
+      const ratings = await Promise.all(
+        res.data.map(async (item) => {
+          try {
+            const ratingRes = await axios.get(`http://localhost:5001/api/rating/menu/${item._id || item.id}/average`);
+            return { id: item._id || item.id, ...ratingRes.data };
+          } catch {
+            return { id: item._id || item.id, avgRating: 0, count: 0 };
+          }
+        })
+      );
+      const ratingsObj = {};
+      ratings.forEach(r => { ratingsObj[r.id] = { avgRating: r.avgRating, count: r.count }; });
+      setMenuRatings(ratingsObj);
+    } catch {
+      setError('Failed to fetch menu items');
+    } finally {
+      setMenuLoading(false);
+    }
+  };
+
+  const handleRatingChange = (menuId, value) => {
+    setRating((prev) => ({ ...prev, [menuId]: value }));
+  };
+
+  const submitRating = async (menuId) => {
+    if (!rating[menuId]) return;
+    const today = new Date().toISOString().slice(0, 10); // e.g., "2025-06-29"
+    const key = `rated_${menuId}_${today}`;
+    if (localStorage.getItem(key)) {
+      setRatingMsg((prev) => ({ ...prev, [menuId]: 'You have already rated this item today.' }));
+      return;
+    }
+    try {
+      await axios.post('http://localhost:5001/api/rating', {
+        menu: menuId,
+        stars: rating[menuId],
+      });
+      setRatingMsg((prev) => ({ ...prev, [menuId]: 'Thank you for rating!' }));
+      localStorage.setItem(key, 'true');
+      // Refresh average rating for this menu item
+      try {
+        const ratingRes = await axios.get(`http://localhost:5001/api/rating/menu/${menuId}/average`);
+        setMenuRatings((prev) => ({
+          ...prev,
+          [menuId]: { avgRating: ratingRes.data.avgRating, count: ratingRes.data.count }
+        }));
+      } catch {
+        // Optionally handle error
+      }
+    } catch {
+      setRatingMsg((prev) => ({ ...prev, [menuId]: 'Failed to submit rating.' }));
+    }
+  };
+
+  return (
+    <div>
+      <h1>Welcome to the Menu Page</h1>
+      {loading && <p>Loading categories...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <div style={{ display: 'flex', overflowX: 'auto', gap: '1rem', margin: '1rem 0' }}>
+        {categories && categories.length > 0 ? (
+          categories.map((cat) => (
+            <button
+              key={cat._id || cat.id}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: '20px',
+                border: selectedCategory === (cat._id || cat.id) ? '2px solid #333' : '1px solid #ccc',
+                background: selectedCategory === (cat._id || cat.id) ? '#f0f0f0' : '#fff',
+                cursor: 'pointer',
+                minWidth: '120px',
+              }}
+              onClick={() => fetchMenuItems(cat._id || cat.id)}
+            >
+              {cat.name}
+            </button>
+          ))
+        ) : (
+          !loading && <span>No categories found.</span>
+        )}
+      </div>
+      {selectedCategory && (
+        <div>
+          <h2>Menu Items</h2>
+          {menuLoading ? (
+            <p>Loading menu items...</p>
+          ) : menuItems && menuItems.length > 0 ? (
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {menuItems.map((item) => (
+                <li key={item._id || item.id} style={{ marginBottom: '1.5rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '10px', marginBottom: '0.5rem' }}
+                      onError={e => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/120?text=No+Image'; }}
+                    />
+                  )}
+                  {/* If no image, show placeholder */}
+                  {!item.image && (
+                    <img
+                      src={'https://via.placeholder.com/120?text=No+Image'}
+                      alt='No Image'
+                      style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '10px', marginBottom: '0.5rem' }}
+                    />
+                  )}
+                  <div style={{ fontWeight: 'bold' }}>{item.name}</div>
+                  <div>{item.description}</div>
+                  <div>Price: ${item.price}</div>
+                  <div>
+                    <span>
+                      Rating: {menuRatings[item._id || item.id]?.avgRating?.toFixed(1) || 'N/A'}
+                      {menuRatings[item._id || item.id]?.count ? ` (${menuRatings[item._id || item.id].count} ratings)` : ''}
+                    </span>
+                  </div>
+                  <div style={{ marginTop: '0.5rem' }}>
+                    <label>Rate this item: </label>
+                    <select
+                      value={rating[item._id || item.id] || ''}
+                      onChange={(e) => handleRatingChange(item._id || item.id, e.target.value)}
+                    >
+                      <option value=''>Select</option>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <option key={star} value={star}>{star} Star{star > 1 ? 's' : ''}</option>
+                      ))}
+                    </select>
+                    <button
+                      style={{ marginLeft: '0.5rem' }}
+                      onClick={() => submitRating(item._id || item.id)}
+                      disabled={!rating[item._id || item.id]}
+                    >
+                      Submit
+                    </button>
+                    {ratingMsg[item._id || item.id] && (
+                      <span style={{ marginLeft: '0.5rem', color: 'green' }}>{ratingMsg[item._id || item.id]}</span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No menu items found for this category.</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Menu;
