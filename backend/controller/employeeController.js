@@ -15,7 +15,14 @@ export const createEmployee = asyncHandler(async (req, res) => {
             stream.end(req.file.buffer);
         });
     }
-    const employee = new Employee({ ...req.body, image: imageUrl });
+    const employee = new Employee({ 
+        ...req.body, 
+        image: imageUrl,
+        // Ensure tableAssigned is only set if position is waiter
+        tableAssigned: req.body.position === 'waiter' ? req.body.tableAssigned : undefined,
+        description: req.body.description,
+        workingHour: req.body.workingHour
+    });
     await employee.save();
     res.status(201).json(employee);
 });
@@ -48,7 +55,13 @@ export const updateEmployee = asyncHandler(async (req, res) => {
     }
     const employee = await Employee.findByIdAndUpdate(
         req.params.id,
-        { ...req.body, image: imageUrl },
+        {
+            ...req.body,
+            image: imageUrl,
+            tableAssigned: req.body.position === 'waiter' ? req.body.tableAssigned : undefined,
+            description: req.body.description,
+            workingHour: req.body.workingHour
+        },
         { new: true, runValidators: true }
     );
     if (!employee) return res.status(404).json({ message: 'Employee not found' });
