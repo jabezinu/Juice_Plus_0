@@ -6,6 +6,7 @@ const menuSchema = new mongoose.Schema({
     price: { type: Number, required: true, min: 0 },
     image: { type: String, trim: true },
     available: { type: Boolean, default: true },
+    outOfStock: { type: Boolean, default: false },
     badge: { type: String, trim: true, enum: ['New', 'Popular', 'Recommended', 'Vegan', ''] },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
 }, {
