@@ -124,6 +124,22 @@ const Menu = () => {
             <ul style={{ listStyle: 'none', padding: 0 }}>
               {menuItems.map((item) => (
                 <li key={item._id || item.id} style={{ marginBottom: '1.5rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '10px', marginBottom: '0.5rem' }}
+                      onError={e => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/120?text=No+Image'; }}
+                    />
+                  )}
+                  {/* If no image, show placeholder */}
+                  {!item.image && (
+                    <img
+                      src={'https://via.placeholder.com/120?text=No+Image'}
+                      alt='No Image'
+                      style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '10px', marginBottom: '0.5rem' }}
+                    />
+                  )}
                   <div style={{ fontWeight: 'bold' }}>{item.name}</div>
                   <div>{item.description}</div>
                   <div>Price: ${item.price}</div>
