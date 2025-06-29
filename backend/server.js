@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 
-// Employee API routes, Menu API routes, Category API routes, User API routes
+// Employee API routes, Menu API routes, Category API routes, Rating API routes
 app.use('/api/employees', employeeRoutes);
 app.use('/api/menus', menuRoutes);
 app.use('/api/categories', categoryRoutes);
