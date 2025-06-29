@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Category from '../models/Category.js';
+import Menu from '../models/Menu.js';
 
 // Create a new category
 export const createCategory = asyncHandler(async (req, res) => {
@@ -29,7 +30,9 @@ export const updateCategory = asyncHandler(async (req, res) => {
 
 // Delete a category by ID
 export const deleteCategory = asyncHandler(async (req, res) => {
+    // Delete all menu items under this category first
+    await Menu.deleteMany({ category: req.params.id });
     const category = await Category.findByIdAndDelete(req.params.id);
     if (!category) return res.status(404).json({ message: 'Category not found' });
-    res.status(200).json({ message: 'Category deleted' });
+    res.status(200).json({ message: 'Category and related menu items deleted' });
 });
