@@ -51,7 +51,8 @@ export const createMenuUnderCategory = asyncHandler(async (req, res) => {
             stream.end(req.file.buffer);
         });
     }
-    const menu = new Menu({ ...req.body, image: imageUrl });
+    // Ensure category is set from params
+    const menu = new Menu({ ...req.body, image: imageUrl, category: req.params.categoryId });
     await menu.save();
     res.status(201).json(menu);
 });
