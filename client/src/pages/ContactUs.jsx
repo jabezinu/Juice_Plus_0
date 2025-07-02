@@ -67,7 +67,15 @@ const ContactUs = () => {
           </div>
         </div>
         {/* Comment Section */}
-        <div className="mt-8">
+        <div className="mt-8 flex flex-col items-center gap-6">
+          <a
+            href="https://maps.app.goo.gl/yctmZKAvD1j97bcH8"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-400 text-white font-bold text-lg shadow-lg hover:scale-105 hover:from-purple-600 hover:to-pink-500 transition-transform duration-200 mb-4"
+          >
+            Leave a Review on Google Maps
+          </a>
           <CommentSection />
         </div>
       </div>
