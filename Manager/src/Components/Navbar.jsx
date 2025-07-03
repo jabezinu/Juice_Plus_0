@@ -7,7 +7,7 @@ const Navbar = () => {
     { name: 'Employee', path: '/employee' },
     { name: 'Menu', path: '/' },
     { name: 'Out of Stock', path: '/out-of-stock' },
-    // { name: 'About', path: '/about' },
+    { name: 'Comments', path: '/comment' },
     // { name: 'Contact', path: '/contact' }
   ];
 
