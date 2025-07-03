@@ -40,7 +40,11 @@ const Employee = () => {
   }
 
   const handleInput = e => {
-    setForm({ ...form, [e.target.name]: e.target.value })
+    if (e.target.type === 'file') {
+      setForm({ ...form, [e.target.name]: e.target.files[0] })
+    } else {
+      setForm({ ...form, [e.target.name]: e.target.value })
+    }
   }
 
   const openCreate = () => {
@@ -195,6 +199,7 @@ const Employee = () => {
             className="bg-white p-6 rounded shadow-md w-full max-w-md relative overflow-y-auto max-h-[90vh] sm:max-h-[80vh] sm:w-[90vw] md:w-[500px]"
             style={{ maxHeight: '90vh', width: '90vw', maxWidth: 500 }}
             onSubmit={handleSubmit}
+            encType="multipart/form-data"
           >
             <button
               type="button"
@@ -203,6 +208,18 @@ const Employee = () => {
               disabled={actionLoading}
             >✕</button>
             <h2 className="text-xl font-bold mb-4">{editId ? 'Edit' : 'Add'} Employee</h2>
+            {/* Image upload and preview */}
+            <div className="mb-2">
+              <label className="block mb-1">Image</label>
+              <input type="file" name="image" accept="image/*" onChange={handleInput} className="w-full border px-2 py-1 rounded" />
+              {/* Preview selected image or current image */}
+              {(form.image && typeof form.image === 'object') && (
+                <img src={URL.createObjectURL(form.image)} alt="Preview" className="w-24 h-24 rounded-full object-cover mt-2" />
+              )}
+              {(form.image && typeof form.image === 'string') && (
+                <img src={form.image} alt="Current" className="w-24 h-24 rounded-full object-cover mt-2" />
+              )}
+            </div>
             <div className="mb-2">
               <label className="block mb-1">Name</label>
               <input name="name" value={form.name} onChange={handleInput} required className="w-full border px-2 py-1 rounded" />
