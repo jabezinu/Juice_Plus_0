@@ -20,6 +20,12 @@ const Menu = () => {
   const [menuDelete, setMenuDelete] = useState({ id: null, categoryId: null })
   const [menuActionLoading, setMenuActionLoading] = useState(false)
   const [menuActionMsg, setMenuActionMsg] = useState('')
+  // Detail UI state
+  const [showDetailModal, setShowDetailModal] = useState(false)
+  const [detailItem, setDetailItem] = useState(null)
+  const [detailRating, setDetailRating] = useState({ count: 0, avg: 0 })
+  const [detailLoading, setDetailLoading] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState(null)
 
   useEffect(() => {
     const fetchCategoriesAndMenus = async () => {
@@ -38,6 +44,10 @@ const Menu = () => {
           menuMap[cat._id] = menuResults[idx].data
         })
         setMenuItems(menuMap)
+        // Set default selected category
+        if (catRes.data.length > 0 && !selectedCategory) {
+          setSelectedCategory(catRes.data[0]._id)
+        }
       } catch {
         setError('Failed to fetch data')
       } finally {
@@ -45,7 +55,7 @@ const Menu = () => {
       }
     }
     fetchCategoriesAndMenus()
-  }, [catActionMsg, menuActionMsg])
+  }, [catActionMsg, menuActionMsg, selectedCategory])
 
   // Category CRUD handlers
   const openCatModal = (type, cat = { name: '', _id: null }) => {
@@ -131,7 +141,7 @@ const Menu = () => {
       setTimeout(() => setMenuActionMsg(''), 1500)
     }
   }
-  const handleMenuDelete = async (id, categoryId) => {
+  const handleMenuDelete = async (id) => {
     if (!window.confirm('Delete this menu item?')) return
     setMenuActionLoading(true)
     try {
@@ -144,6 +154,30 @@ const Menu = () => {
       setTimeout(() => setMenuActionMsg(''), 1500)
     }
   }
+  const openDetailModal = async (item) => {
+    setDetailLoading(true)
+    setDetailItem(item)
+    setShowDetailModal(true)
+    try {
+      // Fetch average rating from backend
+      const res = await axios.get(`http://localhost:5001/api/rating/menu/${item._id}/average`)
+      // Expecting { count, avg } from backend
+      if (typeof res.data === 'object' && res.data !== null) {
+        setDetailRating({ count: res.data.count ?? 0, avg: res.data.avgRating ?? 0 })
+      } else {
+        setDetailRating({ count: 0, avg: 0 })
+      }
+    } catch {
+      setDetailRating({ count: 0, avg: 0 })
+    } finally {
+      setDetailLoading(false)
+    }
+  }
+  const closeDetailModal = () => {
+    setShowDetailModal(false)
+    setDetailItem(null)
+    setDetailRating({ count: 0, avg: 0 })
+  }
 
   if (loading) return <div className="flex items-center justify-center h-64"><span className="loader"></span> Loading...</div>
   if (error) return <div className="text-red-500">{error}</div>
@@ -151,44 +185,77 @@ const Menu = () => {
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center text-pink-700">Menu Management</h1>
-      <div className="flex justify-between items-center mb-6">
-        <button onClick={() => openCatModal('add')} className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded shadow font-semibold transition">+ Add Category</button>
-        {catActionMsg && <span className="ml-4 text-green-600 font-medium">{catActionMsg}</span>}
+      {/* Horizontal Category Selector */}
+      <div className="flex overflow-x-auto gap-4 mb-8 pb-2 scrollbar-thin scrollbar-thumb-pink-300 scrollbar-track-pink-100">
+        {categories.map(cat => (
+          <button
+            key={cat._id}
+            onClick={() => setSelectedCategory(cat._id)}
+            className={`whitespace-nowrap px-6 py-2 rounded-full font-semibold shadow transition-all border-2 ${selectedCategory === cat._id ? 'bg-pink-600 text-white border-pink-600 scale-105' : 'bg-white text-pink-700 border-pink-200 hover:bg-pink-50'}`}
+            style={{ minWidth: '120px' }}
+          >
+            {cat.name}
+          </button>
+        ))}
+        <button
+          onClick={() => openCatModal('add')}
+          className="whitespace-nowrap px-6 py-2 rounded-full font-semibold shadow transition-all border-2 bg-gradient-to-r from-pink-400 to-pink-600 text-white border-pink-400 hover:scale-105 ml-2"
+          style={{ minWidth: '120px' }}
+        >
+          + Add Category
+        </button>
       </div>
-      {categories.length === 0 && <div>No categories found.</div>}
-      {categories.map(category => (
-        <div key={category._id} className="mb-10 bg-white rounded-lg shadow p-6">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-xl font-semibold text-pink-800">{category.name}</h2>
-            <div>
-              <button onClick={() => openCatModal('edit', category)} className="mr-2 px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition">Edit</button>
-              <button onClick={() => handleCatDelete(category._id)} className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition">Delete</button>
-            </div>
-          </div>
-          <div className="flex justify-end mb-4">
-            <button onClick={() => openMenuModal('add', category._id)} className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow text-sm">+ Add Menu Item</button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {menuItems[category._id] && menuItems[category._id].length > 0 ? (
-              menuItems[category._id].map(item => (
-                <div key={item._id} className="border rounded-lg p-4 shadow bg-gray-50 relative">
-                  <h3 className="font-bold text-lg text-pink-700">{item.name}</h3>
-                  <p className="text-gray-600 mb-1">{item.ingredients}</p>
-                  <p className="text-pink-600 font-semibold mb-1">${item.price}</p>
-                  {item.badge && <span className="inline-block mt-1 px-2 py-1 bg-pink-200 text-pink-800 rounded text-xs">{item.badge}</span>}
-                  {item.image && <img src={item.image} alt={item.name} className="mt-2 w-full h-32 object-cover rounded" />}
-                  <div className="absolute top-2 right-2 flex gap-1">
-                    <button onClick={() => openMenuModal('edit', category._id, item)} className="px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 text-xs">Edit</button>
-                    <button onClick={() => handleMenuDelete(item._id, category._id)} className="px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-xs">Delete</button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full text-gray-400">No items in this category.</div>
-            )}
-          </div>
+      {catActionMsg && <div className="mb-4 text-green-600 font-medium text-center">{catActionMsg}</div>}
+      {/* Category Edit/Delete Buttons */}
+      {selectedCategory && (
+        <div className="flex justify-end items-center mb-4 gap-2">
+          <button
+            onClick={() => openCatModal('edit', categories.find(c => c._id === selectedCategory))}
+            className="px-4 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+          >Edit Category</button>
+          <button
+            onClick={() => handleCatDelete(selectedCategory)}
+            className="px-4 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition"
+          >Delete Category</button>
         </div>
-      ))}
+      )}
+      {/* Menu Items for Selected Category */}
+      <div className="mb-10 bg-white rounded-lg shadow p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-pink-800">
+            {categories.find(cat => cat._id === selectedCategory)?.name || 'Select a Category'}
+          </h2>
+          {selectedCategory && (
+            <button
+              onClick={() => openMenuModal('add', selectedCategory)}
+              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow text-sm"
+            >
+              + Add Menu Item
+            </button>
+          )}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {selectedCategory && menuItems[selectedCategory] && menuItems[selectedCategory].length > 0 ? (
+            menuItems[selectedCategory].map(item => (
+              <div key={item._id} className="border rounded-2xl p-5 shadow-lg bg-gradient-to-br from-pink-50 to-white relative hover:shadow-2xl transition-all">
+                <h3 className="font-bold text-lg text-pink-700 mb-1">{item.name}</h3>
+                <p className="text-gray-600 mb-1">{item.ingredients}</p>
+                <p className="text-pink-600 font-semibold mb-1">${item.price}</p>
+                {item.badge && <span className="inline-block mt-1 px-2 py-1 bg-pink-200 text-pink-800 rounded text-xs font-semibold">{item.badge}</span>}
+                {item.image && <img src={item.image} alt={item.name} className="mt-2 w-full h-32 object-cover rounded-xl border border-pink-100 shadow" />}
+                <div className="absolute top-2 right-2 flex gap-1">
+                  <button onClick={() => openMenuModal('edit', selectedCategory, item)} className="px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 text-xs">Edit</button>
+                  <button onClick={() => handleMenuDelete(item._id, selectedCategory)} className="px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-xs">Delete</button>
+                  <button onClick={() => openDetailModal(item)} className="px-2 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-xs">View Details</button>
+                </div>
+                {item.outOfStock && <span className="absolute bottom-2 right-2 bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Out of Stock</span>}
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-gray-400 text-center py-8">No items in this category.</div>
+          )}
+        </div>
+      </div>
 
       {/* Category Modal */}
       {showCatModal && (
@@ -291,6 +358,33 @@ const Menu = () => {
                 {menuActionLoading ? 'Saving...' : (menuModalType === 'add' ? 'Add' : 'Update')}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Detail Modal */}
+      {showDetailModal && detailItem && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
+            <button onClick={closeDetailModal} className="absolute top-2 right-2 text-gray-400 hover:text-gray-700">&times;</button>
+            <h2 className="text-xl font-bold mb-4 text-pink-700">Menu Item Details</h2>
+            {detailLoading ? (
+              <div>Loading...</div>
+            ) : (
+              <>
+                <h3 className="font-bold text-lg mb-2">{detailItem.name}</h3>
+                <p className="mb-1"><span className="font-semibold">Price:</span> ${detailItem.price}</p>
+                <p className="mb-1"><span className="font-semibold">Ingredients:</span> {detailItem.ingredients}</p>
+                {detailItem.badge && <p className="mb-1"><span className="font-semibold">Badge:</span> {detailItem.badge}</p>}
+                {detailItem.image && <img src={detailItem.image} alt={detailItem.name} className="my-2 w-full h-32 object-cover rounded" />}
+                <p className="mb-1"><span className="font-semibold">Out of Stock:</span> {detailItem.outOfStock ? 'Yes' : 'No'}</p>
+                <div className="mt-4 p-3 bg-gray-100 rounded">
+                  <h4 className="font-semibold mb-1 text-pink-700">Rating Details</h4>
+                  <p><span className="font-semibold">Number of Ratings:</span> {typeof detailRating.count === 'number' && !isNaN(detailRating.count) ? detailRating.count : 0}</p>
+                  <p><span className="font-semibold">Average Rating:</span> {typeof detailRating.avg === 'number' && detailRating.count > 0 && !isNaN(detailRating.avg) ? detailRating.avg.toFixed(2) : 'N/A'}</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

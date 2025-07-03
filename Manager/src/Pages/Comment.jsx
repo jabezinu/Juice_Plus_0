@@ -10,8 +10,8 @@ const Comment = () => {
     const fetchComments = async () => {
       try {
         const res = await axios.get('http://localhost:5001/api/comments')
-        setComments(res.data.comments || [])
-      } catch {
+        setComments(res.data.comments)
+      } catch (err) {
         setError('Failed to fetch comments')
       } finally {
         setLoading(false)
@@ -20,20 +20,29 @@ const Comment = () => {
     fetchComments()
   }, [])
 
+  if (loading) return <div className="p-4">Loading comments...</div>
+  if (error) return <div className="p-4 text-red-500">{error}</div>
+
   return (
-    <div className="p-6 max-w-2xl mx-auto">
+    <div className="p-4 max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Comments</h2>
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      <ul className="space-y-4">
-        {comments.map((comment, idx) => (
-          <li key={comment._id || idx} className="bg-white shadow rounded p-4">
-            <div className="font-semibold">{comment.author || 'Anonymous'}</div>
-            <div className="text-gray-700 mt-1">{comment.text || comment.content || ''}</div>
-            <div className="text-xs text-gray-400 mt-2">{comment.createdAt ? new Date(comment.createdAt).toLocaleString() : ''}</div>
-          </li>
-        ))}
-      </ul>
+      {comments.length === 0 ? (
+        <div>No comments found.</div>
+      ) : (
+        <ul className="space-y-4">
+          {comments.map((c) => (
+            <li key={c._id} className="border rounded p-3 bg-white shadow">
+              <div className="font-semibold">
+                {c.anonymous ? 'Anonymous' : c.name || 'No Name'}
+                <span className="text-xs text-gray-400 ml-2">
+                  {new Date(c.createdAt).toLocaleString()}
+                </span>
+              </div>
+              <div className="mt-1 text-gray-700">{c.comment}</div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
