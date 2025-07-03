@@ -4,6 +4,7 @@ import Menu from './Pages/Menu'
 import Employee from './Pages/Employee'
 import Navbar from './Components/Navbar'
 import OutOfStock from './Pages/OutOfStock'
+import Comment from './Pages/Comment'
 
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/" element={<Menu />} />
         <Route path="/employee" element={<Employee />} />
         <Route path="/out-of-stock" element={<OutOfStock />} />
+        <Route path="/comment" element={<Comment />} />
         {/* Add more routes as needed */}
       </Routes>
     </div>
