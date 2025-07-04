@@ -1,110 +1,38 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import React, { useEffect } from 'react'
 import { FaEdit as PencilIcon, FaTrash as TrashIcon } from 'react-icons/fa'
-
-const initialForm = {
-  name: '',
-  phone: '',
-  position: 'waiter',
-  salary: '',
-  description: '',
-  workingHour: '',
-  tableAssigned: '',
-  status: 'active',
-}
+import { useEmployeeStore } from '../stores/employeeStore'
 
 const Employee = () => {
-  const [employees, setEmployees] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState(initialForm)
-  const [editId, setEditId] = useState(null)
-  const [actionLoading, setActionLoading] = useState(false)
-  const [showFired, setShowFired] = useState(false)
+  const {
+    employees,
+    loading,
+    error,
+    showForm,
+    form,
+    editId,
+    actionLoading,
+    showFired,
+    setShowForm,
+    setShowFired,
+    setForm,
+    setField,
+    openCreate,
+    openEdit,
+    handleSubmit,
+    handleDelete,
+    fetchEmployees,
+  } = useEmployeeStore()
 
   useEffect(() => {
     fetchEmployees()
+    // eslint-disable-next-line
   }, [])
-
-  const fetchEmployees = async () => {
-    try {
-      setLoading(true)
-      const res = await axios.get('http://localhost:5001/api/employees/')
-      setEmployees(res.data)
-      setError(null)
-    } catch {
-      setError('Failed to fetch employees')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleInput = e => {
     if (e.target.type === 'file') {
-      setForm({ ...form, [e.target.name]: e.target.files[0] })
+      setField(e.target.name, e.target.files[0])
     } else {
-      setForm({ ...form, [e.target.name]: e.target.value })
-    }
-  }
-
-  const openCreate = () => {
-    setForm(initialForm)
-    setEditId(null)
-    setShowForm(true)
-  }
-
-  const openEdit = emp => {
-    setForm({
-      name: emp.name || '',
-      phone: emp.phone || '',
-      position: emp.position || 'waiter',
-      salary: emp.salary || '',
-      description: emp.description || '',
-      workingHour: emp.workingHour || '',
-      tableAssigned: emp.tableAssigned || '',
-      status: emp.status || 'active',
-    })
-    setEditId(emp._id)
-    setShowForm(true)
-  }
-
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setActionLoading(true)
-    try {
-      const formData = new FormData()
-      Object.entries(form).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) formData.append(key, value)
-      })
-      if (editId) {
-        await axios.put(`http://localhost:5001/api/employees/${editId}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        })
-      } else {
-        await axios.post('http://localhost:5001/api/employees/', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        })
-      }
-      setShowForm(false)
-      fetchEmployees()
-    } catch {
-      alert('Failed to save employee')
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
-  const handleDelete = async id => {
-    if (!window.confirm('Delete this employee?')) return
-    setActionLoading(true)
-    try {
-      await axios.delete(`http://localhost:5001/api/employees/${id}`)
-      fetchEmployees()
-    } catch {
-      alert('Failed to delete employee')
-    } finally {
-      setActionLoading(false)
+      setField(e.target.name, e.target.value)
     }
   }
 
@@ -184,7 +112,7 @@ const Employee = () => {
                 <h2 className="text-lg sm:text-xl font-semibold text-red-600">Fired Employees</h2>
                 <button
                   className="text-xs sm:text-sm px-2 py-1 border rounded bg-white hover:bg-gray-100"
-                  onClick={() => setShowFired(v => !v)}
+                  onClick={() => setShowFired(!showFired)}
                   type="button"
                 >
                   {showFired ? 'Hide' : 'Show'}
