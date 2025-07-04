@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Star, Play, ArrowRight, Coffee, Sparkles, Heart, Award, Zap, Globe, Users, ChevronDown, Eye, Leaf, Mountain, Sun, Moon, MapPin, Phone, Mail, Clock, Droplets, Thermometer } from 'lucide-react';
 import {Link} from 'react-router-dom';
+import Footer from '../components/Footer';
 
 const Home = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -315,49 +316,28 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-stone-800 text-stone-200 py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="flex flex-col items-center md:items-start text-center md:text-left">
-              <h3 className="text-2xl font-bold text-amber-400 mb-4">Akaka Coffee</h3>
-              <p className="text-stone-400 text-sm">
-                Premium Ethiopian coffee roasted to perfection. Experience the difference quality makes.
-              </p>
-            </div>
-            <div className="flex flex-col items-center md:items-start text-center md:text-left">
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm w-full">
-                <li><Link to="/" className="text-stone-400 hover:text-amber-400 transition">Home</Link></li>
-                <li><Link to="/menu" className="text-stone-400 hover:text-amber-400 transition">Menu</Link></li>
-                <li><Link to="/about" className="text-stone-400 hover:text-amber-400 transition">About</Link></li>
-                <li><Link to="/contact" className="text-stone-400 hover:text-amber-400 transition">Contact</Link></li>
-              </ul>
-            </div>
-            <div className="flex flex-col items-center md:items-start text-center md:text-left">
-              <h4 className="font-semibold mb-4">Contact</h4>
-              <div className="space-y-2 text-sm w-full">
-                <div className="flex items-center text-stone-400">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  <span>Addis Ababa, Ethiopia</span>
-                </div>
-                <div className="flex items-center text-stone-400">
-                  <Phone className="h-4 w-4 mr-2" />
-                  <span>+251 903 243174</span>
-                </div>
-                <div className="flex items-center text-stone-400">
-                  <Mail className="h-4 w-4 mr-2" />
-                  <span>contact@akakacoffee.com</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-stone-700 mt-8 pt-8 text-center text-stone-500 text-sm">
-            <p>&copy; {new Date().getFullYear()} Akaka Coffee. All rights reserved.</p>
+            {/* Call to Action */}
+      <div className="py-20 bg-gradient-to-br from-amber-100 to-orange-100">
+        <div className="container mx-auto px-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+            Join Our Story
+          </h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-light">
+            Welcome to Akaka Coffee. Drink a cup, feel the highland breeze, and become part of our story.
+          </p>
+          
+          <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
+            <Link to="/contact">
+              <button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-4 rounded-full font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl">
+                Visit Our Café
+              </button>
+            </Link>
           </div>
         </div>
-      </footer>
+      </div>
 
+      {/* Footer */}
+      <Footer />
       {/* Custom CSS for animations */}
       {/* Moved to index.css: .animate-float { animation: float 4s ease-in-out infinite; } @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-15px) rotate(180deg); } } */}
     </div>

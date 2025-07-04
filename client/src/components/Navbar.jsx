@@ -10,7 +10,7 @@ const Navbar = () => {
 
   const navigation = [
     { name: 'Home', id: 'home', icon: '🏠', path: '/home' },
-    { name: 'Menu', id: 'menu', icon: '🥤', path: '/' },
+    { name: 'Menu', id: 'menu', icon: '🍵', path: '/' },
     { name: 'About', id: 'about', icon: '💫', path: '/about' },
     { name: 'Contact Us', id: 'contact', icon: '📞', path: '/contact' }
   ];
@@ -80,10 +80,13 @@ const Navbar = () => {
                     onClick={() => setIsOpen(false)}
                     className={`group relative px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300 overflow-hidden ${
                       activeTab === item.name
-                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-2xl shadow-purple-500/50 transform scale-105'
-                        : 'text-gray-700 hover:text-white hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-400 hover:scale-110 hover:shadow-lg'
-                    }`}
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                        ? 'bg-gradient-to-r from-gray-800 to-brown-900 text-white shadow-2xl shadow-brown-500/50 transform scale-105'
+                        : 'text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-black-800 hover:to-brown-400 hover:scale-110 hover:shadow-lg'
+                    }`} 
+                    style={{ 
+                      animationDelay: `${index * 0.1}s`,
+                      textShadow: '0 1px 6px rgba(0,0,0,0.18), 0 0px 1px rgba(0,0,0,0.12)'
+                    }}
                   >
                     <div className="flex items-center space-x-2 relative z-10">
                       <span className="text-lg">{item.icon}</span>
@@ -136,7 +139,8 @@ const Navbar = () => {
                 } ${index !== navigation.length - 1 ? 'border-b border-white/10' : ''}`}
                 style={{ 
                   animationDelay: `${index * 0.1}s`,
-                  transform: isOpen ? 'translateX(0)' : 'translateX(-20px)'
+                  transform: isOpen ? 'translateX(0)' : 'translateX(-20px)',
+                  textShadow: '0 1px 6px rgba(0,0,0,0.18), 0 0px 1px rgba(0,0,0,0.12)'
                 }}
               >
                 <span className="text-2xl">{item.icon}</span>

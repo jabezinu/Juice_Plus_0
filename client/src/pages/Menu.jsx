@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Star, StarHalf, Loader2, AlertCircle, ChefHat, Utensils } from 'lucide-react';
 import useMenuStore from '../stores/menuStore';
+import Footer from '../components/Footer';
 
 const Menu = () => {
   const {
@@ -223,6 +224,7 @@ const Menu = () => {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 };

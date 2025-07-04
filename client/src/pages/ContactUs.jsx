@@ -1,6 +1,7 @@
 import React from 'react'
 import CommentSection from '../components/CommentSection';
 import { MdEmail, MdPhone, MdLocationOn, MdAccessTime } from 'react-icons/md';
+import Footer from '../components/Footer';
 
 const workingHours = [
   { day: 'Monday', hours: '8:30 AM – 7:30 PM' },
@@ -165,6 +166,8 @@ const ContactUs = () => {
           </div>
         </div>
       </div>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, Coffee, Heart, Users, Mountain, Sun, Leaf } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Footer from '../components/Footer';
 
 const About = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -225,25 +226,9 @@ const About = () => {
         </div>
       </div>
 
-      {/* Call to Action */}
-      <div className="py-20 bg-gradient-to-br from-amber-100 to-orange-100">
-        <div className="container mx-auto px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-            Join Our Story
-          </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-light">
-            Welcome to Akaka Coffee. Drink a cup, feel the highland breeze, and become part of our story.
-          </p>
-          
-          <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-            <Link to="/contact">
-              <button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-4 rounded-full font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl">
-                Visit Our Café
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
