@@ -249,13 +249,17 @@ const Menu = () => {
                         style={{ width: 'auto', height: 'auto' }}
                       />
                       <div className="absolute top-4 right-4 bg-orange-500 text-white rounded-full px-3 py-1 shadow-sm">
-                        <span className="text-white font-bold text-lg">{item.price} Birr</span>
+                        <span className="text-white font-bold text-lg">{item.badge}</span>
                       </div>
                     </div>
 
                     {/* Content */}
                     <div className="p-6">
-                      <h3 className="text-2xl font-bold text-gray-800 mb-2">{item.name}</h3>
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-2xl font-bold text-gray-800">{item.name}</h3>
+                        <h3 className="text-l font-bold text-gray-600">{item.price} Birr</h3>
+                      </div>
+                      <h3 className="text-l font-bold text-gray-600">{item.outOfStock ? 'Out of Stock' : ''}</h3>
                       <p className="text-gray-600 mb-4 line-clamp-2">{item.description}</p>
                       
                       {/* Rating Display */}

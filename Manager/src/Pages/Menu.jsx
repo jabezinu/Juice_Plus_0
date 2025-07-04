@@ -227,14 +227,14 @@ const Menu = () => {
   }
 
   if (loading) return (
-    <div className="flex items-center justify-center h-screen">
-      <Loader2 className="w-8 h-8 animate-spin text-pink-600" />
-      <span className="ml-2 text-gray-600">Loading menu...</span>
+    <div className="flex items-center justify-center min-h-screen">
+      <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin text-pink-600" />
+      <span className="ml-2 text-sm sm:text-base text-gray-600">Loading menu...</span>
     </div>
   )
   if (error) return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="bg-red-50 border-l-4 border-red-500 p-4 max-w-md">
+    <div className="flex items-center justify-center min-h-screen px-4">
+      <div className="bg-red-50 border-l-4 border-red-500 p-4 w-full max-w-sm sm:max-w-md">
         <div className="flex">
           <div className="flex-shrink-0">
             <X className="h-5 w-5 text-red-500" />
@@ -248,30 +248,30 @@ const Menu = () => {
   )
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+    <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Menu Management</h1>
-            <p className="mt-1 text-gray-500">Manage your menu categories and items</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Menu Management</h1>
+            <p className="mt-1 text-sm sm:text-base text-gray-500">Manage your menu categories and items</p>
           </div>
           <button
             onClick={() => openCatModal('add')}
-            className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+            className="mt-4 sm:mt-0 inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Category
           </button>
         </div>
         {/* Category Tabs */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            <nav className="-mb-px flex space-x-2 sm:space-x-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               {categories.map((cat) => (
                 <button
                   key={cat._id}
                   onClick={() => setSelectedCategory(cat._id)}
-                  className={`whitespace-nowrap py-4 px-4 border-b-2 font-medium text-sm ${
+                  className={`whitespace-nowrap py-3 px-3 sm:py-4 sm:px-4 border-b-2 font-medium text-xs sm:text-sm ${
                     selectedCategory === cat._id
                       ? 'border-pink-500 text-pink-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -287,7 +287,7 @@ const Menu = () => {
         {/* Status Messages */}
         {catActionMsg && (
           <div className="mb-6">
-            <div className="rounded-md bg-green-50 p-4">
+            <div className="rounded-md bg-green-50 p-3 sm:p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <Check className="h-5 w-5 text-green-400" />
@@ -302,21 +302,21 @@ const Menu = () => {
 
         {/* Category Actions */}
         {selectedCategory && (
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-0">
               {categories.find(cat => cat._id === selectedCategory)?.name || 'Select a Category'}
             </h2>
-            <div className="flex space-x-3">
+            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
               <button
                 onClick={() => openCatModal('edit', categories.find(c => c._id === selectedCategory))}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 w-full sm:w-auto"
               >
                 <Edit className="h-4 w-4 mr-2" />
                 Edit Category
               </button>
               <button
                 onClick={() => openMenuModal('add', selectedCategory)}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                className="inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 w-full sm:w-auto"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Menu Item
@@ -328,21 +328,21 @@ const Menu = () => {
         {/* Menu Items Grid */}
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
           {selectedCategory && menuItems[selectedCategory] && menuItems[selectedCategory].length > 0 ? (
-            <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 p-6">
+            <ul className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4 sm:p-6">
               {menuItems[selectedCategory].map((item) => (
                 <li key={item._id} className="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200 hover:shadow-lg transition-shadow duration-200">
-                  <div className="w-full flex items-center justify-between p-6 space-x-6">
+                  <div className="w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 space-y-4 sm:space-y-0 sm:space-x-6">
                     <div className="flex-1 truncate">
                       <div className="flex items-center space-x-3">
-                        <h3 className="text-gray-900 text-sm font-medium truncate">{item.name}</h3>
+                        <h3 className="text-gray-900 text-sm sm:text-base font-medium truncate">{item.name}</h3>
                         {item.outOfStock && (
                           <span className="flex-shrink-0 inline-block px-2 py-0.5 text-yellow-800 text-xs font-medium bg-yellow-100 rounded-full">
                             Out of Stock
                           </span>
                         )}
                       </div>
-                      <p className="mt-1 text-gray-500 text-sm line-clamp-2">{item.ingredients}</p>
-                      <p className="mt-2 text-lg font-semibold text-pink-600">${item.price}</p>
+                      <p className="mt-1 text-gray-500 text-xs sm:text-sm line-clamp-2">{item.ingredients}</p>
+                      <p className="mt-2 text-base sm:text-lg font-semibold text-pink-600">{item.price} Birr</p>
                       {item.badge && (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 text-pink-800 mt-2">
                           {item.badge}
@@ -351,13 +351,13 @@ const Menu = () => {
                     </div>
                     {item.image ? (
                       <img
-                        className="w-20 h-20 bg-gray-300 rounded-full flex-shrink-0 object-cover"
+                        className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-300 rounded-full flex-shrink-0 object-cover"
                         src={item.image}
                         alt={item.name}
                       />
                     ) : (
-                      <div className="w-20 h-20 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center text-gray-400">
-                        <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center text-gray-400">
+                        <svg className="h-8 w-8 sm:h-10 sm:w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </div>
@@ -368,28 +368,28 @@ const Menu = () => {
                       <div className="w-0 flex-1 flex">
                         <button
                           onClick={() => openDetailModal(item)}
-                          className="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500"
+                          className="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-3 sm:py-4 text-xs sm:text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500"
                         >
-                          <Eye className="w-5 h-5 text-gray-400" />
-                          <span className="ml-3">View</span>
+                          <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                          <span className="ml-2 sm:ml-3">View</span>
                         </button>
                       </div>
                       <div className="-ml-px w-0 flex-1 flex">
                         <button
                           onClick={() => openMenuModal('edit', selectedCategory, item)}
-                          className="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent hover:text-gray-500"
+                          className="relative w-0 flex-1 inline-flex items-center justify-center py-3 sm:py-4 text-xs sm:text-sm text-gray-700 font-medium border border-transparent hover:text-gray-500"
                         >
-                          <Edit className="w-5 h-5 text-gray-400" />
-                          <span className="ml-3">Edit</span>
+                          <Edit className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                          <span className="ml-2 sm:ml-3">Edit</span>
                         </button>
                       </div>
                       <div className="-ml-px w-0 flex-1 flex">
                         <button
                           onClick={() => handleMenuDelete(item._id, selectedCategory)}
-                          className="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-red-600 font-medium border border-transparent rounded-br-lg hover:text-red-500"
+                          className="relative w-0 flex-1 inline-flex items-center justify-center py-3 sm:py-4 text-xs sm:text-sm text-red-600 font-medium border border-transparent rounded-br-lg hover:text-red-500"
                         >
-                          <Trash2 className="w-5 h-5 text-red-400" />
-                          <span className="ml-3">Delete</span>
+                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />
+                          <span className="ml-2 sm:ml-3">Delete</span>
                         </button>
                       </div>
                     </div>
@@ -398,9 +398,9 @@ const Menu = () => {
               ))}
             </ul>
           ) : (
-            <div className="text-center py-12">
+            <div className="text-center py-8 sm:py-12">
               <svg
-                className="mx-auto h-12 w-12 text-gray-400"
+                className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -413,17 +413,17 @@ const Menu = () => {
                   d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
                 />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No menu items</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <h3 className="mt-2 text-sm sm:text-base font-medium text-gray-900">No menu items</h3>
+              <p className="mt-1 text-xs sm:text-sm text-gray-500">
                 Get started by creating a new menu item.
               </p>
-              <div className="mt-6">
+              <div className="mt-4 sm:mt-6">
                 <button
                   type="button"
                   onClick={() => openMenuModal('add', selectedCategory)}
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                  className="inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                 >
-                  <Plus className="-ml-1 mr-2 h-5 w-5" />
+                  <Plus className="-ml-1 mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   New Menu Item
                 </button>
               </div>
@@ -437,7 +437,7 @@ const Menu = () => {
         <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={closeCatModal}></div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span>
             <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
               <div className="absolute top-0 right-0 pt-4 pr-4">
                 <button
@@ -451,7 +451,7 @@ const Menu = () => {
               </div>
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                  <h3 className="text-base sm:text-lg leading-6 font-medium text-gray-900" id="modal-title">
                     {catModalType === 'add' ? 'Add New Category' : 'Edit Category'}
                   </h3>
                   <div className="mt-4">
@@ -467,7 +467,7 @@ const Menu = () => {
                             id="category-name"
                             value={catForm.name}
                             onChange={handleCatFormChange}
-                            className="shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full px-4 py-3 sm:text-sm border-gray-300 rounded-md"
+                            className="shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full px-3 py-2 sm:px-4 sm:py-3 sm:text-sm border-gray-300 rounded-md"
                             placeholder="e.g. Appetizers, Main Course"
                             required
                           />
@@ -477,11 +477,11 @@ const Menu = () => {
                         <button
                           type="submit"
                           disabled={catActionLoading}
-                          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-pink-600 text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:col-start-2 sm:text-sm disabled:opacity-50"
+                          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 py-2 sm:px-4 sm:py-2 bg-pink-600 text-sm sm:text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:col-start-2 disabled:opacity-50"
                         >
                           {catActionLoading ? (
                             <>
-                              <Loader2 className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
+                              <Loader2 className="animate-spin -ml-1 mr-3 h-4 w-4 sm:h-5 sm:w-5 text-white" />
                               Processing...
                             </>
                           ) : catModalType === 'add' ? (
@@ -492,7 +492,7 @@ const Menu = () => {
                         </button>
                         <button
                           type="button"
-                          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:mt-0 sm:col-start-1 sm:text-sm"
+                          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-3 py-2 sm:px-4 sm:py-2 bg-white text-sm sm:text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:mt-0 sm:col-start-1"
                           onClick={closeCatModal}
                         >
                           Cancel
@@ -512,8 +512,8 @@ const Menu = () => {
         <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="menu-modal-title" role="dialog" aria-modal="true">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={closeMenuModal}></div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6">
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span>
+            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6">
               <div className="absolute top-0 right-0 pt-4 pr-4">
                 <button
                   type="button"
@@ -526,12 +526,12 @@ const Menu = () => {
               </div>
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900" id="menu-modal-title">
+                  <h3 className="text-base sm:text-lg leading-6 font-medium text-gray-900" id="menu-modal-title">
                     {menuModalType === 'add' ? 'Add New Menu Item' : 'Edit Menu Item'}
                   </h3>
                   <div className="mt-4">
-                    <form onSubmit={handleMenuSubmit} className="space-y-6">
-                      <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                    <form onSubmit={handleMenuSubmit} className="space-y-4 sm:space-y-6">
+                      <div className="grid grid-cols-1 gap-y-4 sm:gap-y-6 gap-x-4 sm:grid-cols-6">
                         <div className="sm:col-span-3">
                           <label htmlFor="item-name" className="block text-sm font-medium text-gray-700">
                             Item Name *
@@ -543,7 +543,7 @@ const Menu = () => {
                               id="item-name"
                               value={menuForm.name}
                               onChange={handleMenuFormChange}
-                              className="shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                              className="shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 py-2"
                               required
                             />
                           </div>
@@ -555,7 +555,7 @@ const Menu = () => {
                           </label>
                           <div className="mt-1 relative rounded-md shadow-sm">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                              <span className="text-gray-500 sm:text-sm">$</span>
+                              <span className="text-gray-500 sm:text-sm"></span>
                             </div>
                             <input
                               type="number"
@@ -563,8 +563,8 @@ const Menu = () => {
                               id="price"
                               value={menuForm.price}
                               onChange={handleMenuFormChange}
-                              className="focus:ring-pink-500 focus:border-pink-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
-                              placeholder="0.00"
+                              className="focus:ring-pink-500 focus:border-pink-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md px-3 py-2"
+                              placeholder="0.00 Birr"
                               min="0"
                               step="0.01"
                               required
@@ -613,8 +613,8 @@ const Menu = () => {
                           </div>
                         </div>
 
-                        <div className="mb-4 sm:col-span-6">
-                          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
+                        <div className="sm:col-span-6">
+                          <label className="block text-sm font-medium text-gray-700" htmlFor="image">
                             {menuForm.image ? 'Current Image' : 'Upload Image'}
                           </label>
                           {menuForm.image && (
@@ -622,12 +622,12 @@ const Menu = () => {
                               <img 
                                 src={menuForm.image} 
                                 alt="Preview" 
-                                className="h-24 w-24 object-cover rounded-md"
+                                className="h-20 w-20 sm:h-24 sm:w-24 object-cover rounded-md"
                               />
                             </div>
                           )}
                           <div className="flex items-center">
-                            <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-md border border-gray-300 transition-colors">
+                            <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 sm:px-4 rounded-md border border-gray-300 transition-colors">
                               Choose File
                               <input
                                 className="hidden"
@@ -647,7 +647,7 @@ const Menu = () => {
                                   }
                                   setMenuForm(prev => ({ ...prev, image: '', imageFile: null }))
                                 }}
-                                className="ml-2 text-red-500 hover:text-red-700"
+                                className="ml-2 text-red-500 hover:text-red-700 text-sm"
                               >
                                 Remove
                               </button>
@@ -657,36 +657,6 @@ const Menu = () => {
                             {menuForm.imageFile ? menuForm.imageFile.name : 'PNG, JPG, JPEG up to 5MB'}
                           </p>
                         </div>
-{/* 
-                        <div className="sm:col-span-6">
-                          <label htmlFor="image-url" className="block text-sm font-medium text-gray-700">
-                            Image URL (optional)
-                          </label>
-                          <div className="mt-1 flex rounded-md shadow-sm">
-                            <input
-                              type="url"
-                              name="imageUrl"
-                              id="image-url"
-                              value={menuForm.imageUrl}
-                              onChange={handleMenuFormChange}
-                              className="flex-1 min-w-0 block w-full px-3 py-2 rounded-md focus:ring-pink-500 focus:border-pink-500 sm:text-sm border-gray-300"
-                              placeholder="https://example.com/image.jpg"
-                            />
-                          </div>
-                          {menuForm.imageUrl && (
-                            <div className="mt-2">
-                              <img
-                                src={menuForm.image}
-                                alt="Preview"
-                                className="h-24 w-24 object-cover rounded-md border border-gray-300"
-                                onError={(e) => {
-                                  e.target.onerror = null;
-                                  e.target.src = 'https://via.placeholder.com/100';
-                                }}
-                              />
-                            </div>
-                          )}
-                        </div> */}
 
                         <div className="sm:col-span-6">
                           <label htmlFor="ingredients" className="block text-sm font-medium text-gray-700">
@@ -697,7 +667,7 @@ const Menu = () => {
                               id="ingredients"
                               name="ingredients"
                               rows={3}
-                              className="shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm border border-gray-300 rounded-md"
+                              className="shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm border border-gray-300 rounded-md px-3 py-2"
                               placeholder="List ingredients separated by commas"
                               value={menuForm.ingredients}
                               onChange={handleMenuFormChange}
@@ -727,11 +697,11 @@ const Menu = () => {
                         <button
                           type="submit"
                           disabled={menuActionLoading}
-                          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-pink-600 text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:col-start-2 sm:text-sm disabled:opacity-50"
+                          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 py-2 sm:px-4 sm:py-2 bg-pink-600 text-sm sm:text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:col-start-2 disabled:opacity-50"
                         >
                           {menuActionLoading ? (
                             <>
-                              <Loader2 className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
+                              <Loader2 className="animate-spin -ml-1 mr-3 h-4 w-4 sm:h-5 sm:w-5 text-white" />
                               Processing...
                             </>
                           ) : menuModalType === 'add' ? (
@@ -742,7 +712,7 @@ const Menu = () => {
                         </button>
                         <button
                           type="button"
-                          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:mt-0 sm:col-start-1 sm:text-sm"
+                          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-3 py-2 sm:px-4 sm:py-2 bg-white text-sm sm:text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:mt-0 sm:col-start-1"
                           onClick={closeMenuModal}
                         >
                           Cancel
@@ -762,8 +732,8 @@ const Menu = () => {
         <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="detail-modal-title" role="dialog" aria-modal="true">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={closeDetailModal}></div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span>
+            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6">
               <div className="absolute top-0 right-0 pt-4 pr-4">
                 <button
                   type="button"
@@ -776,18 +746,18 @@ const Menu = () => {
               </div>
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900" id="detail-modal-title">
+                  <h3 className="text-base sm:text-lg leading-6 font-medium text-gray-900" id="detail-modal-title">
                     Menu Item Details
                   </h3>
                   <div className="mt-4">
                     {detailLoading ? (
-                      <div className="flex justify-center py-8">
-                        <Loader2 className="animate-spin h-8 w-8 text-pink-600" />
+                      <div className="flex justify-center py-6 sm:py-8">
+                        <Loader2 className="animate-spin h-6 w-6 sm:h-8 sm:w-8 text-pink-600" />
                       </div>
                     ) : (
                       <div className="space-y-4">
                         <div className="flex items-start">
-                          <div className="flex-shrink-0 h-24 w-24 rounded-lg overflow-hidden bg-gray-100">
+                          <div className="flex-shrink-0 h-20 w-20 sm:h-24 sm:w-24 rounded-lg overflow-hidden bg-gray-100">
                             {detailItem.image ? (
                               <img
                                 src={detailItem.image}
@@ -800,15 +770,15 @@ const Menu = () => {
                               />
                             ) : (
                               <div className="h-full w-full flex items-center justify-center text-gray-400">
-                                <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="h-10 w-10 sm:h-12 sm:w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                               </div>
                             )}
                           </div>
                           <div className="ml-4 flex-1">
-                            <h4 className="text-lg font-bold text-gray-900">{detailItem.name}</h4>
-                            <p className="text-lg font-semibold text-pink-600">${Number(detailItem.price).toFixed(2)}</p>
+                            <h4 className="text-base sm:text-lg font-bold text-gray-900">{detailItem.name}</h4>
+                            <p className="text-base sm:text-lg font-semibold text-pink-600">{Number(detailItem.price).toFixed(2)} Birr</p>
                             {detailItem.badge && (
                               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 text-pink-800 mt-1">
                                 {detailItem.badge}
@@ -824,23 +794,23 @@ const Menu = () => {
 
                         <div className="border-t border-gray-200 pt-4">
                           <h4 className="text-sm font-medium text-gray-900">Ingredients</h4>
-                          <p className="mt-1 text-sm text-gray-600 whitespace-pre-line">
+                          <p className="mt-1 text-xs sm:text-sm text-gray-600 whitespace-pre-line">
                             {detailItem.ingredients}
                           </p>
                         </div>
 
-                        <div className="bg-gray-50 p-4 rounded-lg">
+                        <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                           <h4 className="text-sm font-medium text-gray-900 mb-2">Rating Information</h4>
                           <dl className="grid grid-cols-2 gap-4">
                             <div>
                               <dt className="text-xs font-medium text-gray-500">Total Ratings</dt>
-                              <dd className="mt-1 text-sm text-gray-900">
+                              <dd className="mt-1 text-xs sm:text-sm text-gray-900">
                                 {typeof detailRating.count === 'number' && !isNaN(detailRating.count) ? detailRating.count : 0}
                               </dd>
                             </div>
                             <div>
                               <dt className="text-xs font-medium text-gray-500">Average Rating</dt>
-                              <dd className="mt-1 text-sm text-gray-900">
+                              <dd className="mt-1 text-xs sm:text-sm text-gray-900">
                                 {typeof detailRating.avg === 'number' && detailRating.count > 0 && !isNaN(detailRating.avg) ? (
                                   <div className="flex items-center">
                                     <span className="mr-1">{detailRating.avg.toFixed(1)}</span>
@@ -861,7 +831,7 @@ const Menu = () => {
               <div className="mt-5 sm:mt-6">
                 <button
                   type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-pink-600 text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:text-sm"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 py-2 sm:px-4 sm:py-2 bg-pink-600 text-sm sm:text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                   onClick={closeDetailModal}
                 >
                   Close
@@ -872,7 +842,7 @@ const Menu = () => {
         </div>
       )}
       {menuActionMsg && (
-        <div className="fixed bottom-4 right-4 bg-green-100 text-green-700 px-4 py-2 rounded shadow-lg z-50">
+        <div className="fixed bottom-4 right-4 bg-green-100 text-green-700 px-3 py-2 sm:px-4 sm:py-2 rounded shadow-lg z-50 text-sm">
           {menuActionMsg}
         </div>
       )}
