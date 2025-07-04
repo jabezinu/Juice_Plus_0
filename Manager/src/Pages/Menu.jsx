@@ -1,24 +1,36 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Plus, Edit, Trash2, Eye, Loader2, X, Check, Star, StarHalf, ChevronLeft, ChevronRight } from 'lucide-react'
+import useMenuStore from '../stores/menuStore'
 
 const Menu = () => {
-  const [categories, setCategories] = useState([])
-  const [menuItems, setMenuItems] = useState({})
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  // CRUD UI state
+  // Zustand store hooks
+  const {
+    categories,
+    menuItems,
+    loading,
+    error,
+    selectedCategory,
+    fetchCategoriesAndMenus,
+    setSelectedCategory,
+    addCategory,
+    updateCategory,
+    deleteCategory,
+    addMenuItem,
+    updateMenuItem,
+    deleteMenuItem
+  } = useMenuStore()
+
+  // UI state (modals, forms, etc.)
   const [showCatModal, setShowCatModal] = useState(false)
   const [catModalType, setCatModalType] = useState('add') // 'add' or 'edit'
   const [catForm, setCatForm] = useState({ name: '', _id: null })
-  const [catDeleteId, setCatDeleteId] = useState(null)
   const [catActionLoading, setCatActionLoading] = useState(false)
   const [catActionMsg, setCatActionMsg] = useState('')
   // Menu CRUD UI state
   const [showMenuModal, setShowMenuModal] = useState(false)
   const [menuModalType, setMenuModalType] = useState('add') // 'add' or 'edit'
   const [menuForm, setMenuForm] = useState({ name: '', price: '', ingredients: '', badge: '', image: '', _id: null, category: '', outOfStock: false, imageFile: null })
-  const [menuDelete, setMenuDelete] = useState({ id: null, categoryId: null })
   const [menuActionLoading, setMenuActionLoading] = useState(false)
   const [menuActionMsg, setMenuActionMsg] = useState('')
   // Detail UI state
@@ -26,37 +38,11 @@ const Menu = () => {
   const [detailItem, setDetailItem] = useState(null)
   const [detailRating, setDetailRating] = useState({ count: 0, avg: 0 })
   const [detailLoading, setDetailLoading] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState(null)
 
   useEffect(() => {
-    const fetchCategoriesAndMenus = async () => {
-      try {
-        setLoading(true)
-        // Fetch all categories
-        const catRes = await axios.get('http://localhost:5001/api/categories/')
-        setCategories(catRes.data)
-        // Fetch menu items for each category
-        const menuPromises = catRes.data.map(cat =>
-          axios.get(`http://localhost:5001/api/menus/category/${cat._id}`)
-        )
-        const menuResults = await Promise.all(menuPromises)
-        const menuMap = {}
-        catRes.data.forEach((cat, idx) => {
-          menuMap[cat._id] = menuResults[idx].data
-        })
-        setMenuItems(menuMap)
-        // Set default selected category
-        if (catRes.data.length > 0 && !selectedCategory) {
-          setSelectedCategory(catRes.data[0]._id)
-        }
-      } catch {
-        setError('Failed to fetch data')
-      } finally {
-        setLoading(false)
-      }
-    }
     fetchCategoriesAndMenus()
-  }, [catActionMsg, menuActionMsg, selectedCategory])
+    // eslint-disable-next-line
+  }, [])
 
   // Category CRUD handlers
   const openCatModal = (type, cat = { name: '', _id: null }) => {
@@ -76,10 +62,10 @@ const Menu = () => {
     setCatActionLoading(true)
     try {
       if (catModalType === 'add') {
-        await axios.post('http://localhost:5001/api/categories/', { name: catForm.name })
+        await addCategory(catForm.name)
         setCatActionMsg('Category added!')
       } else {
-        await axios.put(`http://localhost:5001/api/categories/${catForm._id}`, { name: catForm.name })
+        await updateCategory(catForm._id, catForm.name)
         setCatActionMsg('Category updated!')
       }
       closeCatModal()
@@ -90,20 +76,6 @@ const Menu = () => {
       setTimeout(() => setCatActionMsg(''), 1500)
     }
   }
-  const handleCatDelete = async id => {
-    if (!window.confirm('Delete this category?')) return
-    setCatActionLoading(true)
-    try {
-      await axios.delete(`http://localhost:5001/api/categories/${id}`)
-      setCatActionMsg('Category deleted!')
-    } catch {
-      setCatActionMsg('Error deleting category')
-    } finally {
-      setCatActionLoading(false)
-      setTimeout(() => setCatActionMsg(''), 1500)
-    }
-  }
-
   // Menu CRUD handlers
   const openMenuModal = (type, categoryId, item = { name: '', price: '', ingredients: '', badge: '', image: '', _id: null, outOfStock: false, imageFile: null }) => {
     setMenuModalType(type)
@@ -147,37 +119,22 @@ const Menu = () => {
     setMenuActionLoading(true)
     try {
       const formData = new FormData()
-      
-      // Add all menu data directly to formData
       formData.append('name', menuForm.name)
       formData.append('price', parseFloat(menuForm.price))
       formData.append('ingredients', menuForm.ingredients)
       formData.append('badge', menuForm.badge)
       formData.append('outOfStock', !!menuForm.outOfStock)
       formData.append('category', menuForm.category)
-
-      // Handle image upload
       if (menuForm.imageFile) {
         formData.append('image', menuForm.imageFile)
       } else if (menuForm.image && !menuForm.image.startsWith('blob:')) {
-        // If it's an existing URL (not a blob URL from file selection)
         formData.append('imageUrl', menuForm.image)
       }
-
       if (menuModalType === 'add') {
-        await axios.post(`http://localhost:5001/api/menus/category/${menuForm.category}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
+        await addMenuItem(menuForm.category, formData)
         setMenuActionMsg('Menu item added!')
       } else {
-        // For update, include the menu ID in the URL
-        await axios.put(`http://localhost:5001/api/menus/${menuForm._id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
+        await updateMenuItem(menuForm._id, formData)
         setMenuActionMsg('Menu item updated!')
       }
       closeMenuModal()
@@ -192,7 +149,7 @@ const Menu = () => {
     if (!window.confirm('Delete this menu item?')) return
     setMenuActionLoading(true)
     try {
-      await axios.delete(`http://localhost:5001/api/menus/${id}`)
+      await deleteMenuItem(id)
       setMenuActionMsg('Menu item deleted!')
     } catch {
       setMenuActionMsg('Error deleting menu item')
