@@ -57,7 +57,7 @@ const Navbar = ({ children }) => {
                 <img src="/images.png" alt="Logo" className="w-full h-full object-cover" />
               </div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Akaka
+                Akaka Coffee
               </h1>
             </div>
           )}
