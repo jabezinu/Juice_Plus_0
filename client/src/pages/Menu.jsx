@@ -72,8 +72,27 @@ const Menu = () => {
 
   const submitRating = async (menuId) => {
     if (!rating[menuId]) return;
+    
     const today = new Date().toISOString().slice(0, 10);
-    const key = `rated_${menuId}_${today}`;
+    const ratingKey = `ratings_${menuId}_${today}`;
+    const countKey = `rating_count_${menuId}_${today}`;
+    
+    // Get today's ratings for this menu item
+    const todayRatings = JSON.parse(localStorage.getItem(ratingKey) || '[]');
+    const ratingCount = parseInt(localStorage.getItem(countKey) || '0', 10);
+    
+    // Check if user has already rated this item 4 times today
+    if (ratingCount >= 4) {
+      setRatingMsg((prev) => ({ ...prev, [menuId]: 'You have reached the maximum of 4 ratings per day for this item.' }));
+      return;
+    }
+    
+    // Check if user has already rated this item today (prevent duplicate ratings)
+    if (todayRatings.includes(menuId)) {
+      setRatingMsg((prev) => ({ ...prev, [menuId]: 'You have already rated this item today.' }));
+      return;
+    }
+    
     try {
       const res = await fetch('http://localhost:5001/api/rating', {
         method: 'POST',
@@ -85,8 +104,15 @@ const Menu = () => {
           stars: rating[menuId],
         }),
       });
+      
       if (!res.ok) throw new Error('Failed to submit');
+      
+      // Update local storage with the new rating
+      localStorage.setItem(ratingKey, JSON.stringify([...todayRatings, menuId]));
+      localStorage.setItem(countKey, (ratingCount + 1).toString());
+      
       setRatingMsg((prev) => ({ ...prev, [menuId]: 'Thank you for rating!' }));
+      
       try {
         const ratingRes = await fetch(`http://localhost:5001/api/rating/menu/${menuId}/average`);
         const ratingData = await ratingRes.json();
