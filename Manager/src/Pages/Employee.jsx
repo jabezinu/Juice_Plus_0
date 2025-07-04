@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { FaEdit as PencilIcon, FaTrash as TrashIcon } from 'react-icons/fa'
 
 const initialForm = {
   name: '',
@@ -9,7 +10,7 @@ const initialForm = {
   description: '',
   workingHour: '',
   tableAssigned: '',
-  status: 'active', // Added default status
+  status: 'active',
 }
 
 const Employee = () => {
@@ -62,7 +63,7 @@ const Employee = () => {
       description: emp.description || '',
       workingHour: emp.workingHour || '',
       tableAssigned: emp.tableAssigned || '',
-      status: emp.status || 'active', // Set status when editing
+      status: emp.status || 'active',
     })
     setEditId(emp._id)
     setShowForm(true)
@@ -125,25 +126,52 @@ const Employee = () => {
             <h2 className="text-xl font-semibold mb-2">Current Employees</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {employees.filter(emp => emp.status !== 'fired').map(emp => (
-                <div key={emp._id} className="bg-white shadow rounded p-4 flex flex-col items-center">
-                  {emp.image && <img src={emp.image} alt={emp.name} className="w-24 h-24 rounded-full object-cover mb-2" />}
-                  <div className="font-bold text-lg">{emp.name}</div>
+                <div
+                  key={emp._id}
+                  className="relative bg-white shadow-md rounded-lg p-6 flex flex-col items-center group hover:shadow-lg transition-shadow duration-200"
+                >
+                  {emp.image && (
+                    <img
+                      src={emp.image}
+                      alt={emp.name}
+                      className="w-32 h-32 rounded-full object-cover mb-4 ring-2 ring-gray-200"
+                    />
+                  )}
+                  <div className="text-xl font-semibold text-gray-800">{emp.name}</div>
                   <div className="text-gray-600">{emp.position}</div>
-                  <div className="text-gray-500 text-sm">{emp.phone}</div>
-                  <div className="text-xs mt-1">Status: {emp.status}</div>
-                  <div className="text-xs">Salary: ${emp.salary}</div>
-                  <div className="text-xs">Hired: {emp.dateHired ? new Date(emp.dateHired).toLocaleDateString() : ''}</div>
-                  <div className="flex gap-2 mt-3">
+                  <div className="mt-4 text-sm text-gray-700 space-y-1">
+                    <div>Phone: {emp.phone}</div>
+                    <div>
+                      Status:{' '}
+                      <span
+                        className={
+                          emp.status === 'active' ? 'text-green-600' : 'text-gray-600'
+                        }
+                      >
+                        {emp.status}
+                      </span>
+                    </div>
+                    <div>Salary: ${emp.salary}</div>
+                    <div>
+                      Hired:{' '}
+                      {emp.dateHired ? new Date(emp.dateHired).toLocaleDateString() : ''}
+                    </div>
+                  </div>
+                  <div className="absolute top-4 right-4 flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <button
-                      className="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500"
+                      className="p-2 bg-yellow-400 text-white rounded-full hover:bg-yellow-500"
                       onClick={() => openEdit(emp)}
                       disabled={actionLoading}
-                    >Edit</button>
+                    >
+                      <PencilIcon className="w-5 h-5" />
+                    </button>
                     <button
-                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                      className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
                       onClick={() => handleDelete(emp._id)}
                       disabled={actionLoading}
-                    >Delete</button>
+                    >
+                      <TrashIcon className="w-5 h-5" />
+                    </button>
                   </div>
                 </div>
               ))}
@@ -165,25 +193,49 @@ const Employee = () => {
               {showFired && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                   {employees.filter(emp => emp.status === 'fired').map(emp => (
-                    <div key={emp._id} className="bg-gray-100 shadow rounded p-4 flex flex-col items-center opacity-80">
-                      {emp.image && <img src={emp.image} alt={emp.name} className="w-24 h-24 rounded-full object-cover mb-2 grayscale" />}
-                      <div className="font-bold text-lg line-through">{emp.name}</div>
+                    <div
+                      key={emp._id}
+                      className="relative bg-gray-100 shadow-md rounded-lg p-6 flex flex-col items-center group hover:shadow-lg transition-shadow duration-200 border-l-4 border-red-500 opacity-80"
+                    >
+                      {emp.image && (
+                        <img
+                          src={emp.image}
+                          alt={emp.name}
+                          className="w-32 h-32 rounded-full object-cover mb-4 ring-2 ring-gray-200 grayscale"
+                        />
+                      )}
+                      <div className="text-xl font-semibold text-gray-800 line-through">
+                        {emp.name}
+                      </div>
                       <div className="text-gray-600">{emp.position}</div>
-                      <div className="text-gray-500 text-sm">{emp.phone}</div>
-                      <div className="text-xs mt-1 text-red-600">Status: {emp.status}</div>
-                      <div className="text-xs">Salary: ${emp.salary}</div>
-                      <div className="text-xs">Hired: {emp.dateHired ? new Date(emp.dateHired).toLocaleDateString() : ''}</div>
-                      <div className="flex gap-2 mt-3">
+                      <div className="mt-4 text-sm text-gray-700 space-y-1">
+                        <div>Phone: {emp.phone}</div>
+                        <div>
+                          Status: <span className="text-red-600">{emp.status}</span>
+                        </div>
+                        <div>Salary: ${emp.salary}</div>
+                        <div>
+                          Hired:{' '}
+                          {emp.dateHired
+                            ? new Date(emp.dateHired).toLocaleDateString()
+                            : ''}
+                        </div>
+                      </div>
+                      <div className="absolute top-4 right-4 flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <button
-                          className="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500"
+                          className="p-2 bg-yellow-400 text-white rounded-full hover:bg-yellow-500"
                           onClick={() => openEdit(emp)}
                           disabled={actionLoading}
-                        >Edit</button>
+                        >
+                          <PencilIcon className="w-5 h-5" />
+                        </button>
                         <button
-                          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                          className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
                           onClick={() => handleDelete(emp._id)}
                           disabled={actionLoading}
-                        >Delete</button>
+                        >
+                          <TrashIcon className="w-5 h-5" />
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -206,31 +258,62 @@ const Employee = () => {
               className="absolute top-2 right-2 text-gray-400 hover:text-gray-700"
               onClick={() => setShowForm(false)}
               disabled={actionLoading}
-            >✕</button>
+            >
+              ✕
+            </button>
             <h2 className="text-xl font-bold mb-4">{editId ? 'Edit' : 'Add'} Employee</h2>
-            {/* Image upload and preview */}
             <div className="mb-2">
               <label className="block mb-1">Image</label>
-              <input type="file" name="image" accept="image/*" onChange={handleInput} className="w-full border px-2 py-1 rounded" />
-              {/* Preview selected image or current image */}
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleInput}
+                className="w-full border px-2 py-1 rounded"
+              />
               {(form.image && typeof form.image === 'object') && (
-                <img src={URL.createObjectURL(form.image)} alt="Preview" className="w-24 h-24 rounded-full object-cover mt-2" />
+                <img
+                  src={URL.createObjectURL(form.image)}
+                  alt="Preview"
+                  className="w-24 h-24 rounded-full object-cover mt-2"
+                />
               )}
               {(form.image && typeof form.image === 'string') && (
-                <img src={form.image} alt="Current" className="w-24 h-24 rounded-full object-cover mt-2" />
+                <img
+                  src={form.image}
+                  alt="Current"
+                  className="w-24 h-0; h-24 rounded-full object-cover mt-2"
+                />
               )}
             </div>
             <div className="mb-2">
               <label className="block mb-1">Name</label>
-              <input name="name" value={form.name} onChange={handleInput} required className="w-full border px-2 py-1 rounded" />
+              <input
+                name="name"
+                value={form.name}
+                onChange={handleInput}
+                required
+                className="w-full border px-2 py-1 rounded"
+              />
             </div>
             <div className="mb-2">
               <label className="block mb-1">Phone</label>
-              <input name="phone" value={form.phone} onChange={handleInput} required className="w-full border px-2 py-1 rounded" />
+              <input
+                name="phone"
+                value={form.phone}
+                onChange={handleInput}
+                required
+                className="w-full border px-2 py-1 rounded"
+              />
             </div>
             <div className="mb-2">
               <label className="block mb-1">Position</label>
-              <select name="position" value={form.position} onChange={handleInput} className="w-full border px-2 py-1 rounded">
+              <select
+                name="position"
+                value={form.position}
+                onChange={handleInput}
+                className="w-full border px-2 py-1 rounded"
+              >
                 <option value="waiter">Waiter</option>
                 <option value="cashier">Cashier</option>
                 <option value="manager">Manager</option>
@@ -240,27 +323,54 @@ const Employee = () => {
             </div>
             <div className="mb-2">
               <label className="block mb-1">Salary</label>
-              <input name="salary" value={form.salary} onChange={handleInput} type="number" min="0" required className="w-full border px-2 py-1 rounded" />
+              <input
+                name="salary"
+                value={form.salary}
+                onChange={handleInput}
+                type="number"
+                min="0"
+                required
+                className="w-full border px-2 py-1 rounded"
+              />
             </div>
             {form.position === 'waiter' && (
               <div className="mb-2">
                 <label className="block mb-1">Table Assigned</label>
-                <input name="tableAssigned" value={form.tableAssigned} onChange={handleInput} className="w-full border px-2 py-1 rounded" />
+                <input
+                  name="tableAssigned"
+                  value={form.tableAssigned}
+                  onChange={handleInput}
+                  className="w-full border px-2 py-1 rounded"
+                />
               </div>
             )}
             <div className="mb-2">
               <label className="block mb-1">Description</label>
-              <input name="description" value={form.description} onChange={handleInput} className="w-full border px-2 py-1 rounded" />
+              <input
+                name="description"
+                value={form.description}
+                onChange={handleInput}
+                className="w-full border px-2 py-1 rounded"
+              />
             </div>
             <div className="mb-4">
               <label className="block mb-1">Working Hour</label>
-              <input name="workingHour" value={form.workingHour} onChange={handleInput} className="w-full border px-2 py-1 rounded" />
+              <input
+                name="workingHour"
+                value={form.workingHour}
+                onChange={handleInput}
+                className="w-full border px-2 py-1 rounded"
+              />
             </div>
-            {/* Status dropdown only when editing */}
             {editId && (
               <div className="mb-4">
                 <label className="block mb-1">Status</label>
-                <select name="status" value={form.status} onChange={handleInput} className="w-full border px-2 py-1 rounded">
+                <select
+                  name="status"
+                  value={form.status}
+                  onChange={handleInput}
+                  className="w-full border px-2 py-1 rounded"
+                >
                   <option value="active">Active</option>
                   <option value="fired">Fired</option>
                   <option value="resigned">Resigned</option>
@@ -271,7 +381,9 @@ const Employee = () => {
               type="submit"
               className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               disabled={actionLoading}
-            >{actionLoading ? 'Saving...' : (editId ? 'Update' : 'Create')}</button>
+            >
+              {actionLoading ? 'Saving...' : editId ? 'Update' : 'Create'}
+            </button>
           </form>
         </div>
       )}

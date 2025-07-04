@@ -80,27 +80,24 @@ const OutOfStock = () => {
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center text-pink-700">Out of Stock Menu Items</h1>
       {categories.length === 0 && <div>No categories found.</div>}
-      {categories.map(category => (
-        <div key={category._id} className="mb-10 bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-pink-800 mb-4">{category.name}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {outOfStockItems[category._id] && outOfStockItems[category._id].length > 0 ? (
-              outOfStockItems[category._id].map(item => (
-                <div key={item._id} className="border rounded-lg p-4 shadow bg-gray-50 relative">
-                  <h3 className="font-bold text-lg text-pink-700">{item.name}</h3>
-                  <p className="text-gray-600 mb-1">{item.ingredients}</p>
-                  <p className="text-pink-600 font-semibold mb-1">${item.price}</p>
-                  {item.badge && <span className="inline-block mt-1 px-2 py-1 bg-pink-200 text-pink-800 rounded text-xs">{item.badge}</span>}
-                  {item.image && <img src={item.image} alt={item.name} className="mt-2 w-full h-32 object-cover rounded" />}
-                  <button onClick={() => handleEditClick(item)} className="absolute top-2 right-2 px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 text-xs">Edit</button>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full text-gray-400">No out of stock items in this category.</div>
-            )}
-          </div>
-        </div>
-      ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {categories.some(cat => outOfStockItems[cat._id]?.length > 0) ? (
+          categories.map(category =>
+            outOfStockItems[category._id]?.map(item => (
+              <div key={item._id} className="border rounded-lg p-4 shadow bg-gray-50 relative">
+                <h3 className="font-bold text-lg text-pink-700">{item.name}</h3>
+                <p className="text-gray-600 mb-1">{item.ingredients}</p>
+                <p className="text-pink-600 font-semibold mb-1">${item.price}</p>
+                {item.badge && <span className="inline-block mt-1 px-2 py-1 bg-pink-200 text-pink-800 rounded text-xs">{item.badge}</span>}
+                {item.image && <img src={item.image} alt={item.name} className="mt-2 w-full h-32 object-cover rounded" />}
+                <button onClick={() => handleEditClick(item)} className="absolute top-2 right-2 px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 text-xs">Edit</button>
+              </div>
+            ))
+          )
+        ) : (
+          <div className="col-span-full text-center text-gray-400 py-8">No out of stock items found.</div>
+        )}
+      </div>
       {/* Edit Modal */}
       {showEditModal && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">

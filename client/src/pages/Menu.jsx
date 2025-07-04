@@ -19,6 +19,11 @@ const Menu = () => {
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
         setCategories(data);
+        
+        // Automatically select the first category if available
+        if (data.length > 0) {
+          fetchMenuItems(data[0]._id);
+        }
       } catch {
         setError('Failed to fetch categories');
       } finally {
@@ -209,15 +214,16 @@ const Menu = () => {
                 {menuItems.map((item) => (
                   <div key={item._id || item.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
                     {/* Image */}
-                    <div className="relative h-48 overflow-hidden rounded-t-2xl">
+                    <div className="relative flex items-center justify-center bg-gray-100 min-h-[12rem] max-h-64 overflow-hidden rounded-t-2xl">
                       <img
                         src={item.image || 'https://via.placeholder.com/400x200?text=No+Image'}
                         alt={item.name}
-                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                        className="max-w-full max-h-full object-contain"
                         onError={e => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/400x200?text=No+Image'; }}
+                        style={{ width: 'auto', height: 'auto' }}
                       />
                       <div className="absolute top-4 right-4 bg-orange-500 text-white rounded-full px-3 py-1 shadow-sm">
-                        <span className="text-white font-bold text-lg">${item.price}</span>
+                        <span className="text-white font-bold text-lg">{item.price} Birr</span>
                       </div>
                     </div>
 
@@ -236,8 +242,7 @@ const Menu = () => {
                         </div>
                         {menuRatings[item._id || item.id]?.avgRating && (
                           <span className="text-sm text-gray-500">
-                            {menuRatings[item._id || item.id].avgRating.toFixed(1)} 
-                            ({menuRatings[item._id || item.id].count} reviews)
+                            {menuRatings[item._id || item.id].avgRating.toFixed(1)}
                           </span>
                         )}
                       </div>

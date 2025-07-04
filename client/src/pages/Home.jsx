@@ -134,7 +134,7 @@ const Home = () => {
       ))}
 
       {/* Hero Section - Natural & Elegant */}
-      <section ref={heroRef} className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden pt-16">
+      <section ref={heroRef} className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden pt-36 md:pt-24">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <div 
@@ -367,45 +367,36 @@ const Home = () => {
       {/* Footer */}
       <footer className="bg-stone-800 text-stone-200 py-12">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <h3 className="text-2xl font-bold text-amber-400 mb-4">Akaka Coffee</h3>
               <p className="text-stone-400 text-sm">
                 Premium Ethiopian coffee roasted to perfection. Experience the difference quality makes.
               </p>
             </div>
-            <div>
+            <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="text-stone-400 hover:text-amber-400 transition">Home</a></li>
-                <li><a href="#" className="text-stone-400 hover:text-amber-400 transition">Shop</a></li>
-                <li><a href="#" className="text-stone-400 hover:text-amber-400 transition">About</a></li>
-                <li><a href="#" className="text-stone-400 hover:text-amber-400 transition">Contact</a></li>
+              <ul className="space-y-2 text-sm w-full">
+                <li><Link to="/home" className="text-stone-400 hover:text-amber-400 transition">Home</Link></li>
+                <li><Link to="/" className="text-stone-400 hover:text-amber-400 transition">Menu</Link></li>
+                <li><Link to="/about" className="text-stone-400 hover:text-amber-400 transition">About</Link></li>
+                <li><Link to="/contact" className="text-stone-400 hover:text-amber-400 transition">Contact</Link></li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4">Products</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="text-stone-400 hover:text-amber-400 transition">Single Origin</a></li>
-                <li><a href="#" className="text-stone-400 hover:text-amber-400 transition">Blends</a></li>
-                <li><a href="#" className="text-stone-400 hover:text-amber-400 transition">Accessories</a></li>
-                <li><a href="#" className="text-stone-400 hover:text-amber-400 transition">Subscriptions</a></li>
-              </ul>
-            </div>
-            <div>
+            <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <h4 className="font-semibold mb-4">Contact</h4>
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2 text-sm w-full">
                 <div className="flex items-center text-stone-400">
                   <MapPin className="h-4 w-4 mr-2" />
                   <span>Addis Ababa, Ethiopia</span>
                 </div>
                 <div className="flex items-center text-stone-400">
                   <Phone className="h-4 w-4 mr-2" />
-                  <span>+251 123 456 789</span>
+                  <span>+251 903 243174</span>
                 </div>
                 <div className="flex items-center text-stone-400">
                   <Mail className="h-4 w-4 mr-2" />
-                  <span>hello@akakacoffee.com</span>
+                  <span>contact@akakacoffee.com</span>
                 </div>
               </div>
             </div>

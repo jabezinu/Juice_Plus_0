@@ -191,67 +191,7 @@ const About = () => {
           </div>
         </div>
       </div>
-
-      {/* Coffee Ceremony Section */}
-      <div className="py-20 bg-gradient-to-br from-amber-50 to-orange-50">
-        <div className="container mx-auto px-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-                The Three Sacred Cups
-              </h2>
-              <p className="text-xl text-gray-600 font-light">
-                In Ethiopian tradition, coffee is served in three rounds, each with special meaning
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  name: 'Abol',
-                  meaning: 'Blessing',
-                  description: 'The first cup blesses those who drink it with good fortune and friendship',
-                  image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop'
-                },
-                {
-                  name: 'Tona',
-                  meaning: 'Prosperity',
-                  description: 'The second cup brings prosperity and strengthens the bonds of community',
-                  image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=300&fit=crop'
-                },
-                {
-                  name: 'Baraka',
-                  meaning: 'Wisdom',
-                  description: 'The third cup grants wisdom and spiritual insight for the journey ahead',
-                  image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop'
-                }
-              ].map((cup, index) => (
-                <div 
-                  key={index}
-                  className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300 group"
-                >
-                  <div className="relative mb-6">
-                    <img 
-                      src={cup.image}
-                      alt={cup.name}
-                      className="w-full h-48 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-xl"></div>
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <h3 className="text-2xl font-bold">{cup.name}</h3>
-                      <p className="text-amber-200">{cup.meaning}</p>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    {cup.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
+      
       {/* Flavors Section */}
       <div className="py-20 bg-gradient-to-br from-orange-900 to-red-900">
         <div className="container mx-auto px-8">
