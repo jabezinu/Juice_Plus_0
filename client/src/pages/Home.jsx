@@ -75,8 +75,7 @@ const Home = () => {
     {
       name: "Ethiopian Highlands",
       description: "Single-origin beans from the birthplace of coffee, with bright floral notes and wine-like acidity",
-      price: "$34.99",
-      originalPrice: "$44.99",
+      price: "34.99 Birr",
       badge: "ORIGIN",
       rarity: "Limited harvest",
       image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=300&fit=crop",
@@ -85,8 +84,7 @@ const Home = () => {
     {
       name: "Volcanic Roast",
       description: "Medium roast with rich chocolate undertones and a hint of smoky volcanic earth",
-      price: "$29.99",
-      originalPrice: "$39.99",
+      price: "29.99 Birr",
       badge: "SIGNATURE",
       rarity: "Our bestseller",
       image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop",
@@ -95,8 +93,7 @@ const Home = () => {
     {
       name: "Mountain Mist",
       description: "Light roast with delicate citrus notes and a silky smooth finish from high-altitude beans",
-      price: "$32.99",
-      originalPrice: "$42.99",
+      price: "32.99 Birr",
       badge: "PREMIUM",
       rarity: "High altitude grown",
       image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop",
