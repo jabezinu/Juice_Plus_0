@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Star, Play, ArrowRight, Coffee, Sparkles, Heart, Award, Zap, Globe, Users, ChevronDown, Eye, Leaf, Mountain, Sun, Moon, MapPin, Phone, Mail } from 'lucide-react';
+import { Star, Play, ArrowRight, Coffee, Sparkles, Heart, Award, Zap, Globe, Users, ChevronDown, Eye, Leaf, Mountain, Sun, Moon, MapPin, Phone, Mail, Clock, Droplets, Thermometer } from 'lucide-react';
 import {Link} from 'react-router-dom';
 
 const Home = () => {
@@ -8,6 +8,7 @@ const Home = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [coffeeBeans, setCoffeeBeans] = useState([]);
   const [timeOfDay, setTimeOfDay] = useState('morning');
+  const [activeStep, setActiveStep] = useState(0);
   const heroRef = useRef(null);
 
   useEffect(() => {
@@ -53,51 +54,66 @@ const Home = () => {
     return () => clearInterval(testimonialInterval);
   }, []);
 
+  useEffect(() => {
+    const stepInterval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % coffeeSteps.length);
+    }, 3000);
+
+    return () => clearInterval(stepInterval);
+  }, []);
+
   const testimonials = [
     {
       text: "The aroma alone transported me to the Ethiopian highlands. This coffee is pure poetry in a cup.",
       title: "Coffee Enthusiast",
       rating: 5,
+      author: "Liya T.",
+      location: "Addis Ababa, Ethiopia",
     },
     {
       text: "I've traveled the world for coffee, but nothing compares to Akaka's incredible depth of flavor.",
       title: "Travel Blogger",
       rating: 5,
+      author: "Jonas M.",
+      location: "Berlin, Germany",
     },
     {
       text: "As a barista, I can confidently say this is the finest coffee I've ever worked with. Absolutely exceptional.",
       title: "Master Barista",
       rating: 5,
+      author: "Sara K.",
+      location: "London, UK",
     }
   ];
 
-  const premiumBlends = [
+  const coffeeSteps = [
     {
-      name: "Ethiopian Highlands",
-      description: "Single-origin beans from the birthplace of coffee, with bright floral notes and wine-like acidity",
-      price: "34.99 Birr",
-      badge: "ORIGIN",
-      rarity: "Limited harvest",
-      image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=300&fit=crop",
-      gradient: "from-emerald-600 to-teal-500"
+      title: "Hand-Picked at Dawn",
+      description: "Our farmers wake before sunrise to hand-select only the ripest coffee cherries at peak flavor",
+      icon: Sun,
+      color: "from-orange-400 to-amber-500",
+      image: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=300&fit=crop"
     },
     {
-      name: "Volcanic Roast",
-      description: "Medium roast with rich chocolate undertones and a hint of smoky volcanic earth",
-      price: "29.99 Birr",
-      badge: "SIGNATURE",
-      rarity: "Our bestseller",
-      image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop",
-      gradient: "from-amber-600 to-orange-500"
+      title: "Washed & Sorted",
+      description: "Each cherry is carefully washed and sorted by hand, ensuring only the finest beans make it through",
+      icon: Droplets,
+      color: "from-blue-400 to-cyan-500",
+      image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop"
     },
     {
-      name: "Mountain Mist",
-      description: "Light roast with delicate citrus notes and a silky smooth finish from high-altitude beans",
-      price: "32.99 Birr",
-      badge: "PREMIUM",
-      rarity: "High altitude grown",
-      image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop",
-      gradient: "from-blue-600 to-purple-500"
+      title: "Slow Roasted",
+      description: "Small batches roasted to perfection in our traditional roasters, bringing out each bean's unique character",
+      icon: Thermometer,
+      color: "from-red-400 to-orange-500",
+      image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=300&fit=crop"
+    },
+    {
+      title: "Served Fresh",
+      description: "Ground moments before brewing, ensuring you experience the full complexity of flavors in every cup",
+      icon: Coffee,
+      color: "from-amber-400 to-yellow-500",
+      image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop"
     }
   ];
 
@@ -227,68 +243,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Premium Blends - Natural Layout */}
-      <section className="py-20 relative">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-stone-800 mb-4">
-              Our Premium Collection
-            </h2>
-            <p className="text-lg text-stone-600 max-w-2xl mx-auto">
-              Discover our signature blends, each carefully crafted to deliver an exceptional coffee experience
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {premiumBlends.map((blend, index) => (
-              <div key={index} className="group relative">
-                <div className="bg-white/90 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105">
-                  {/* Badge */}
-                  <div className={`absolute top-4 right-4 z-10 bg-gradient-to-r ${blend.gradient} text-white px-3 py-1 rounded-full text-xs font-semibold`}>
-                    {blend.badge}
-                  </div>
-
-                  {/* Image */}
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={blend.image} 
-                      alt={blend.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-stone-800 mb-2">{blend.name}</h3>
-                    <p className="text-stone-600 text-sm mb-1">{blend.rarity}</p>
-                    <p className="text-stone-700 mb-4 leading-relaxed text-sm">{blend.description}</p>
-
-                    {/* Rating */}
-                    <div className="flex justify-center mb-4">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 text-amber-400 fill-current" />
-                      ))}
-                    </div>
-
-                    {/* Price */}
-                    <div className="text-center mb-6">
-                      <span className="text-2xl font-bold text-stone-800">{blend.price}</span>
-                      <span className="text-sm text-stone-500 line-through ml-2">{blend.originalPrice}</span>
-                    </div>
-
-                    {/* CTA Button */}
-                    <button className={`w-full bg-gradient-to-r ${blend.gradient} text-white py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2`}>
-                      <span>Add to Cart</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Testimonials - Elegant Carousel */}
       <section className="py-20 relative">
@@ -374,8 +328,8 @@ const Home = () => {
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <h4 className="font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm w-full">
-                <li><Link to="/home" className="text-stone-400 hover:text-amber-400 transition">Home</Link></li>
-                <li><Link to="/" className="text-stone-400 hover:text-amber-400 transition">Menu</Link></li>
+                <li><Link to="/" className="text-stone-400 hover:text-amber-400 transition">Home</Link></li>
+                <li><Link to="/menu" className="text-stone-400 hover:text-amber-400 transition">Menu</Link></li>
                 <li><Link to="/about" className="text-stone-400 hover:text-amber-400 transition">About</Link></li>
                 <li><Link to="/contact" className="text-stone-400 hover:text-amber-400 transition">Contact</Link></li>
               </ul>
@@ -405,15 +359,7 @@ const Home = () => {
       </footer>
 
       {/* Custom CSS for animations */}
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-15px) rotate(180deg); }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-      `}</style>
+      {/* Moved to index.css: .animate-float { animation: float 4s ease-in-out infinite; } @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-15px) rotate(180deg); } } */}
     </div>
   );
 };
