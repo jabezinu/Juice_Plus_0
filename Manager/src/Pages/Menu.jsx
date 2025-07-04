@@ -628,7 +628,6 @@ const Menu = () => {
                               placeholder="List ingredients separated by commas"
                               value={menuForm.ingredients}
                               onChange={handleMenuFormChange}
-                              required
                             />
                           </div>
                         </div>
