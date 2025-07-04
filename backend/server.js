@@ -5,7 +5,7 @@ import menuRoutes from './routes/menuRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import ratingRoutes from './routes/ratingRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
-import connectDB from './config/db.js';
+// import connectDB from './config/db.js';
 import cors from 'cors';
 
 // Load environment variables
@@ -27,12 +27,26 @@ app.use('/api/rating', ratingRoutes);
 app.use('/api/comments', commentRoutes);
 
 // MongoDB connection
-const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5000;
 
-connectDB()
-    .then(() => {
-        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    })
-    .catch((err) => {
-        console.error('MongoDB connection error:', err);
-    });
+// connectDB()
+//     .then(() => {
+//         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+//     })
+//     .catch((err) => {
+//         console.error('MongoDB connection error:', err);
+//     });
+
+// Vercel deployment
+let isConnected = false;
+
+async function connectDB() {
+    if (isConnected) return ;
+    await mongoose.connect(process.env.MONGO_URL);
+    isConnected = true;
+}
+
+export default async function handler(req, res) {
+    await connectDB();
+    app(req, res);
+}
