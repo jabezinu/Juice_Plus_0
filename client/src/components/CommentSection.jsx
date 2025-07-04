@@ -78,9 +78,7 @@ const CommentSection = () => {
             </div>
             <div className="ml-3">
               <p className="text-sm text-yellow-700">
-                You've already submitted a comment today. {lastCommentTime && (
-                  <span>Your last comment was at {lastCommentTime.toLocaleTimeString()}.</span>
-                )} You can submit another comment tomorrow.</p>
+                You've already submitted a comment today.</p>
             </div>
           </div>
         </div>
