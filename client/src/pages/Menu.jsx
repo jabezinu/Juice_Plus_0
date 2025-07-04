@@ -1,137 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Star, StarHalf, Loader2, AlertCircle, ChefHat, Utensils } from 'lucide-react';
+import useMenuStore from '../stores/menuStore';
 
 const Menu = () => {
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [menuItems, setMenuItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [menuLoading, setMenuLoading] = useState(false);
-  const [rating, setRating] = useState({}); // { [menuId]: value }
-  const [ratingMsg, setRatingMsg] = useState({}); // { [menuId]: msg }
-  const [menuRatings, setMenuRatings] = useState({}); // { [menuId]: { avgRating, count } }
+  const {
+    categories,
+    selectedCategory,
+    menuItems,
+    loading,
+    error,
+    menuLoading,
+    rating,
+    ratingMsg,
+    menuRatings,
+    fetchCategories,
+    fetchMenuItems,
+    handleRatingChange,
+    submitRating
+  } = useMenuStore();
 
+  // Fetch categories on component mount
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch('http://localhost:5001/api/categories');
-        if (!res.ok) throw new Error('Failed to fetch');
-        const data = await res.json();
-        setCategories(data);
-        
-        // Automatically select the first category if available
-        if (data.length > 0) {
-          fetchMenuItems(data[0]._id);
-        }
-      } catch {
-        setError('Failed to fetch categories');
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchCategories();
-  }, []);
-
-  const fetchMenuItems = async (categoryId) => {
-    setMenuLoading(true);
-    setMenuItems([]);
-    setSelectedCategory(categoryId);
-    try {
-      const res = await fetch(`http://localhost:5001/api/menus/category/${categoryId}`);
-      if (!res.ok) throw new Error('Failed to fetch');
-      const data = await res.json();
-      setMenuItems(data);
-      const ratings = await Promise.all(
-        data.map(async (item) => {
-          try {
-            const ratingRes = await fetch(`http://localhost:5001/api/rating/menu/${item._id || item.id}/average`);
-            const ratingData = await ratingRes.json();
-            return { id: item._id || item.id, ...ratingData };
-          } catch {
-            return { id: item._id || item.id, avgRating: 0, count: 0 };
-          }
-        })
-      );
-      const ratingsObj = {};
-      ratings.forEach(r => { ratingsObj[r.id] = { avgRating: r.avgRating, count: r.count }; });
-      setMenuRatings(ratingsObj);
-    } catch {
-      setError('Failed to fetch menu items');
-    } finally {
-      setMenuLoading(false);
-    }
-  };
-
-  const handleRatingChange = (menuId, value) => {
-    // Toggle rating if clicking the same star again, otherwise set new rating
-    const newRating = rating[menuId] === value ? 0 : value;
-    setRating((prev) => ({ ...prev, [menuId]: newRating }));
-    setRatingMsg((prev) => ({ ...prev, [menuId]: '' }));
-  };
-
-  const submitRating = async (menuId) => {
-    if (!rating[menuId]) return;
-    
-    const today = new Date().toISOString().slice(0, 10);
-    const ratingKey = `ratings_${menuId}_${today}`;
-    const countKey = `rating_count_${menuId}_${today}`;
-    
-    // Get today's ratings for this menu item
-    const todayRatings = JSON.parse(localStorage.getItem(ratingKey) || '[]');
-    const ratingCount = parseInt(localStorage.getItem(countKey) || '0', 10);
-    
-    // Check if user has already rated this item 4 times today
-    if (ratingCount >= 4) {
-      setRatingMsg((prev) => ({ ...prev, [menuId]: 'You have reached the maximum of 4 ratings per day for this item.' }));
-      return;
-    }
-    
-    // Check if user has already rated this item today (prevent duplicate ratings)
-    if (todayRatings.includes(menuId)) {
-      setRatingMsg((prev) => ({ ...prev, [menuId]: 'You have already rated this item today.' }));
-      return;
-    }
-    
-    try {
-      const res = await fetch('http://localhost:5001/api/rating', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          menu: menuId,
-          stars: rating[menuId],
-        }),
-      });
-      
-      if (!res.ok) throw new Error('Failed to submit');
-      
-      // Update local storage with the new rating
-      localStorage.setItem(ratingKey, JSON.stringify([...todayRatings, menuId]));
-      localStorage.setItem(countKey, (ratingCount + 1).toString());
-      
-      setRatingMsg((prev) => ({ ...prev, [menuId]: 'Thank you for rating!' }));
-      
-      try {
-        const ratingRes = await fetch(`http://localhost:5001/api/rating/menu/${menuId}/average`);
-        const ratingData = await ratingRes.json();
-        setMenuRatings((prev) => ({
-          ...prev,
-          [menuId]: { avgRating: ratingData.avgRating, count: ratingData.count }
-        }));
-      } catch {
-        // Optionally handle error
-      }
-    } catch {
-      setRatingMsg((prev) => ({ ...prev, [menuId]: 'Failed to submit rating.' }));
-    }
-  };
+  }, [fetchCategories]);
 
   const renderStars = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
+
     
     for (let i = 0; i < fullStars; i++) {
       stars.push(<Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />);
