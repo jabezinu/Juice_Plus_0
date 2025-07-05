@@ -5,6 +5,7 @@ import menuRoutes from './routes/menuRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import ratingRoutes from './routes/ratingRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
+import mongoose from 'mongoose';
 // import connectDB from './config/db.js';
 import cors from 'cors';
 
