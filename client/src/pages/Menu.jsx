@@ -157,7 +157,7 @@ const Menu = () => {
                         <h3 className="text-2xl font-bold text-gray-800">{item.name}</h3>
                         <h3 className="text-l font-bold text-gray-600">{item.price} Birr</h3>
                       </div>
-                      <h3 className="text-l font-bold text-gray-600">{item.outOfStock ? 'Out of Stock' : ''}</h3>
+                      <h3 className="text-l font-bold text-red-400">{item.outOfStock ? 'Sold Out' : ''}</h3>
                       <p className="text-gray-600 mb-4 line-clamp-2">{item.description}</p>
                       
                       {/* Rating Display */}

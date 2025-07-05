@@ -15,8 +15,8 @@ const Footer = () => (
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <h4 className="font-semibold mb-4">Quick Links</h4>
           <ul className="space-y-2 text-sm w-full">
-            <li><Link to="/" className="text-stone-400 hover:text-amber-400 transition">Home</Link></li>
-            <li><Link to="/menu" className="text-stone-400 hover:text-amber-400 transition">Menu</Link></li>
+            <li><Link to="/home" className="text-stone-400 hover:text-amber-400 transition">Home</Link></li>
+            <li><Link to="/" className="text-stone-400 hover:text-amber-400 transition">Menu</Link></li>
             <li><Link to="/about" className="text-stone-400 hover:text-amber-400 transition">About</Link></li>
             <li><Link to="/contact" className="text-stone-400 hover:text-amber-400 transition">Contact</Link></li>
           </ul>
@@ -30,17 +30,17 @@ const Footer = () => (
             </div>
             <div className="flex items-center text-stone-400">
               <Phone className="h-4 w-4 mr-2" />
-              <span>+251 903 243174</span>
+              <span><a href="tel:+251903243174" className="text-stone-400 hover:text-amber-400 transition">+251 903 243174</a></span>
             </div>
             <div className="flex items-center text-stone-400">
               <Mail className="h-4 w-4 mr-2" />
-              <span>contact@akakacoffee.com</span>
+              <span><a href="mailto:contact@akakacoffee.com" className="text-stone-400 hover:text-amber-400 transition">contact@akakacoffee.com</a></span>
             </div>
           </div>
         </div>
       </div>
       <div className="border-t border-stone-700 mt-8 pt-8 text-center text-stone-500 text-sm">
-        <p>&copy; {new Date().getFullYear()} Akaka Coffee. All rights reserved. | Built by <a href="https://my-portfolio-website-delta-one.vercel.app/" className="text-amber-400 hover:underline">CodeArc</a></p>
+        <p>&copy; {new Date().getFullYear()} Akaka Coffee. All rights reserved. | Built by <a href="https://code-arc-4ouu.vercel.app/" className="text-amber-400 hover:underline">CodeArc</a></p>
       </div>
     </div>
   </footer>

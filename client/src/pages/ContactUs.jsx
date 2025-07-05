@@ -32,7 +32,7 @@ const ContactUs = () => {
         <div className="absolute bottom-1/4 right-1/4 w-2 h-4 bg-amber-900 rounded-full transform -rotate-45 animate-bounce delay-2000"></div>
       </div>
 
-      <div className="relative z-10 min-h-screen px-4 py-8 sm:py-12 lg:py-20">
+      <div className="relative z-10 min-h-screen px-4 py-8 sm:py-12 lg:py-20 pt-20 sm:pt-12 lg:pt-20">
         {/* Header Section */}
         <div className="text-center mb-8 sm:mb-12 lg:mb-16">
           <div className="inline-block mb-4 sm:mb-6">

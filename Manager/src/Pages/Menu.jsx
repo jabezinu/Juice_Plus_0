@@ -266,20 +266,42 @@ const Menu = () => {
               {categories.find(cat => cat._id === selectedCategory)?.name || 'Select a Category'}
             </h2>
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
-              <button
-                onClick={() => openCatModal('edit', categories.find(c => c._id === selectedCategory))}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 w-full sm:w-auto"
-              >
-                <Edit className="h-4 w-4 mr-2" />
-                Edit Category
-              </button>
-              <button
-                onClick={() => openMenuModal('add', selectedCategory)}
-                className="inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 w-full sm:w-auto"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Menu Item
-              </button>
+              <div className="flex flex-row space-x-2 bg-white rounded-lg shadow-md p-2 sm:p-3 border border-gray-200">
+                <button
+                  onClick={() => openCatModal('add')}
+                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Category
+                </button>
+                <button
+                  onClick={() => openCatModal('edit', categories.find(c => c._id === selectedCategory))}
+                  className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Category
+                </button>
+                <button
+                  onClick={async () => {
+                    if (window.confirm('Are you sure you want to delete this category?')) {
+                      setCatActionLoading(true)
+                      try {
+                        await deleteCategory(selectedCategory)
+                        setCatActionMsg('Category deleted!')
+                      } catch {
+                        setCatActionMsg('Error deleting category')
+                      } finally {
+                        setCatActionLoading(false)
+                        setTimeout(() => setCatActionMsg(''), 1500)
+                      }
+                    }
+                  }}
+                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Category
+                </button>
+              </div>
             </div>
           </div>
         )}
