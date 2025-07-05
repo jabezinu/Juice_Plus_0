@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api';
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache duration
 
 const useMenuStore = create((set, get) => ({

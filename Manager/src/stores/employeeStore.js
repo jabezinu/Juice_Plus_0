@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import axios from 'axios'
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
 const initialForm = {
   name: '',
   phone: '',
@@ -32,7 +34,7 @@ export const useEmployeeStore = create((set, get) => ({
   fetchEmployees: async () => {
     set({ loading: true })
     try {
-      const res = await axios.get('http://localhost:5001/api/employees/')
+      const res = await axios.get(`${BACKEND_URL}/employees/`)
       set({ employees: res.data, error: null })
     } catch {
       set({ error: 'Failed to fetch employees' })
@@ -73,11 +75,11 @@ export const useEmployeeStore = create((set, get) => ({
         if (value !== undefined && value !== null) formData.append(key, value)
       })
       if (editId) {
-        await axios.put(`http://localhost:5001/api/employees/${editId}`, formData, {
+        await axios.put(`${BACKEND_URL}/employees/${editId}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
       } else {
-        await axios.post('http://localhost:5001/api/employees/', formData, {
+        await axios.post(`${BACKEND_URL}/employees/`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
       }
@@ -95,7 +97,7 @@ export const useEmployeeStore = create((set, get) => ({
     set({ actionLoading: true })
     const { fetchEmployees } = get()
     try {
-      await axios.delete(`http://localhost:5001/api/employees/${id}`)
+      await axios.delete(`${BACKEND_URL}/employees/${id}`)
       fetchEmployees()
     } catch {
       alert('Failed to delete employee')

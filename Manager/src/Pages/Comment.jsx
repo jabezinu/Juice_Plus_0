@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
 const Comment = () => {
   const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(true)
@@ -8,7 +10,7 @@ const Comment = () => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/comments')
+        const res = await fetch(`${BACKEND_URL}/comments`)
         const data = await res.json()
         setComments(data.comments)
       } catch (err) {

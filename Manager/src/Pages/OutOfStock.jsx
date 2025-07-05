@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
 const OutOfStock = () => {
   const [categories, setCategories] = useState([])
   const [outOfStockItems, setOutOfStockItems] = useState({})
@@ -16,11 +18,11 @@ const OutOfStock = () => {
       try {
         setLoading(true)
         // Fetch all categories
-        const catRes = await axios.get('http://localhost:5001/api/categories/')
+        const catRes = await axios.get(`${BACKEND_URL}/categories/`)
         setCategories(catRes.data)
         // Fetch menu items for each category
         const menuPromises = catRes.data.map(cat =>
-          axios.get(`http://localhost:5001/api/menus/category/${cat._id}`)
+          axios.get(`${BACKEND_URL}/menus/category/${cat._id}`)
         )
         const menuResults = await Promise.all(menuPromises)
         const outMap = {}
@@ -57,7 +59,7 @@ const OutOfStock = () => {
     e.preventDefault()
     setEditLoading(true)
     try {
-      await axios.put(`http://localhost:5001/api/menus/${editForm._id}`,
+      await axios.put(`${BACKEND_URL}/menus/${editForm._id}`,
         { ...editForm, price: parseFloat(editForm.price), outOfStock: !!editForm.outOfStock })
       setEditMsg('Menu item updated!')
       setTimeout(() => {

@@ -3,6 +3,8 @@ import axios from 'axios'
 import { Plus, Edit, Trash2, Eye, Loader2, X, Check, Star, StarHalf, ChevronLeft, ChevronRight } from 'lucide-react'
 import useMenuStore from '../stores/menuStore'
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
 const Menu = () => {
   // Zustand store hooks
   const {
@@ -164,7 +166,7 @@ const Menu = () => {
     setShowDetailModal(true)
     try {
       // Fetch average rating from backend
-      const res = await axios.get(`http://localhost:5001/api/rating/menu/${item._id}/average`)
+      const res = await axios.get(`${BACKEND_URL}/rating/menu/${item._id}/average`)
       // Expecting { count, avg } from backend
       if (typeof res.data === 'object' && res.data !== null) {
         setDetailRating({ count: res.data.count ?? 0, avg: res.data.avgRating ?? 0 })

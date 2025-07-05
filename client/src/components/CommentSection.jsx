@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
 const CommentSection = () => {
   const [form, setForm] = useState({ name: '', phone: '', comment: '', anonymous: false });
   const [loading, setLoading] = useState(false);
@@ -46,7 +48,7 @@ const CommentSection = () => {
     setError('');
     setSuccess('');
     try {
-      await axios.post('http://localhost:5001/api/comments', form);
+      await axios.post(`${BACKEND_URL}/comments`, form);
       setSuccess('Comment submitted successfully! Thank you for your feedback.');
       setForm({ name: '', phone: '', comment: '', anonymous: false });
       

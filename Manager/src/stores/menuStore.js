@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import axios from 'axios'
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
 const useMenuStore = create((set, get) => ({
   categories: [],
   menuItems: {},
@@ -11,11 +13,11 @@ const useMenuStore = create((set, get) => ({
   fetchCategoriesAndMenus: async () => {
     set({ loading: true, error: null })
     try {
-      const catRes = await axios.get('http://localhost:5001/api/categories/')
+      const catRes = await axios.get(`${BACKEND_URL}/categories/`)
       const categories = catRes.data
       // Fetch menu items for each category
       const menuPromises = categories.map(cat =>
-        axios.get(`http://localhost:5001/api/menus/category/${cat._id}`)
+        axios.get(`${BACKEND_URL}/menus/category/${cat._id}`)
       )
       const menuResults = await Promise.all(menuPromises)
       const menuMap = {}
@@ -36,32 +38,32 @@ const useMenuStore = create((set, get) => ({
   setSelectedCategory: (id) => set({ selectedCategory: id }),
   // Category CRUD
   addCategory: async (name) => {
-    await axios.post('http://localhost:5001/api/categories/', { name })
+    await axios.post(`${BACKEND_URL}/categories/`, { name })
     await get().fetchCategoriesAndMenus()
   },
   updateCategory: async (_id, name) => {
-    await axios.put(`http://localhost:5001/api/categories/${_id}`, { name })
+    await axios.put(`${BACKEND_URL}/categories/${_id}`, { name })
     await get().fetchCategoriesAndMenus()
   },
   deleteCategory: async (_id) => {
-    await axios.delete(`http://localhost:5001/api/categories/${_id}`)
+    await axios.delete(`${BACKEND_URL}/categories/${_id}`)
     await get().fetchCategoriesAndMenus()
   },
   // Menu CRUD
   addMenuItem: async (categoryId, formData) => {
-    await axios.post(`http://localhost:5001/api/menus/category/${categoryId}`, formData, {
+    await axios.post(`${BACKEND_URL}/menus/category/${categoryId}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
     await get().fetchCategoriesAndMenus()
   },
   updateMenuItem: async (_id, formData) => {
-    await axios.put(`http://localhost:5001/api/menus/${_id}`, formData, {
+    await axios.put(`${BACKEND_URL}/menus/${_id}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
     await get().fetchCategoriesAndMenus()
   },
   deleteMenuItem: async (_id) => {
-    await axios.delete(`http://localhost:5001/api/menus/${_id}`)
+    await axios.delete(`${BACKEND_URL}/menus/${_id}`)
     await get().fetchCategoriesAndMenus()
   },
 }))
