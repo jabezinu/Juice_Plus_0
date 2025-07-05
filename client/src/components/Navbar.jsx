@@ -33,8 +33,8 @@ const Navbar = () => {
 
   // Get active tab from location
   const getActiveTab = () => {
-    // Special case: '/' is Menu
-    if (location.pathname === '/') return 'Menu';
+    // Special case: '/' is Home
+    if (location.pathname === '/') return 'Home';
     const found = navigation.find((item) => item.path === location.pathname);
     return found ? found.name : '';
   };
