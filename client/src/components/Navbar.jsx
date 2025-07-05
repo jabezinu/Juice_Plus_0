@@ -9,8 +9,8 @@ const Navbar = () => {
   const location = useLocation();
 
   const navigation = [
-    { name: 'Home', id: 'home', icon: '🏠', path: '/home' },
-    { name: 'Menu', id: 'menu', icon: '🍵', path: '/' },
+    { name: 'Home', id: 'home', icon: '🏠', path: '/' },
+    { name: 'Menu', id: 'menu', icon: '🍵', path: '/menu' },
     { name: 'About', id: 'about', icon: '💫', path: '/about' },
     { name: 'Contact Us', id: 'contact', icon: '📞', path: '/contact' }
   ];
@@ -54,7 +54,7 @@ const Navbar = () => {
             {/* Logo */}
             <div className="flex-shrink-0 group">
               <Link 
-                to="/home"
+                to="/"
                 className="flex items-center cursor-pointer transform transition-all duration-300 hover:scale-110"
                 onClick={() => setIsOpen(false)}
               >

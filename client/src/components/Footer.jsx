@@ -15,8 +15,8 @@ const Footer = () => (
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <h4 className="font-semibold mb-4">Quick Links</h4>
           <ul className="space-y-2 text-sm w-full">
-            <li><Link to="/home" className="text-stone-400 hover:text-amber-400 transition">Home</Link></li>
-            <li><Link to="/" className="text-stone-400 hover:text-amber-400 transition">Menu</Link></li>
+            <li><Link to="/" className="text-stone-400 hover:text-amber-400 transition">Home</Link></li>
+            <li><Link to="/menu" className="text-stone-400 hover:text-amber-400 transition">Menu</Link></li>
             <li><Link to="/about" className="text-stone-400 hover:text-amber-400 transition">About</Link></li>
             <li><Link to="/contact" className="text-stone-400 hover:text-amber-400 transition">Contact</Link></li>
           </ul>
@@ -30,7 +30,7 @@ const Footer = () => (
             </div>
             <div className="flex items-center text-stone-400">
               <Phone className="h-4 w-4 mr-2" />
-              <span><a href="tel:+251903243174" className="text-stone-400 hover:text-amber-400 transition">+251 903 243174</a></span>
+              <span><a href="tel:+251903243174" className="text-stone-400 hover:text-amber-400 transition">+251-90-899-2890</a></span>
             </div>
             <div className="flex items-center text-stone-400">
               <Mail className="h-4 w-4 mr-2" />

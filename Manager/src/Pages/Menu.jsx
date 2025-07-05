@@ -308,6 +308,20 @@ const Menu = () => {
 
         {/* Menu Items Grid */}
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+          {selectedCategory && (
+            <div className="flex justify-between items-center px-4 pt-4 pb-2 sm:px-6">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900">Menu Items</h3>
+              <button
+                type="button"
+                onClick={() => openMenuModal('add', selectedCategory)}
+                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-base font-semibold rounded-lg text-white bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
+                style={{ boxShadow: '0 4px 14px 0 rgba(236, 72, 153, 0.15)' }}
+              >
+                <Plus className="-ml-1 mr-2 h-5 w-5" />
+                Add Menu Item
+              </button>
+            </div>
+          )}
           {selectedCategory && menuItems[selectedCategory] && menuItems[selectedCategory].length > 0 ? (
             <ul className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4 sm:p-6">
               {menuItems[selectedCategory].map((item) => (
@@ -378,7 +392,7 @@ const Menu = () => {
                 </li>
               ))}
             </ul>
-          ) : (
+          ) : selectedCategory ? (
             <div className="text-center py-8 sm:py-12">
               <svg
                 className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400"
@@ -398,18 +412,8 @@ const Menu = () => {
               <p className="mt-1 text-xs sm:text-sm text-gray-500">
                 Get started by creating a new menu item.
               </p>
-              <div className="mt-4 sm:mt-6">
-                <button
-                  type="button"
-                  onClick={() => openMenuModal('add', selectedCategory)}
-                  className="inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
-                >
-                  <Plus className="-ml-1 mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  New Menu Item
-                </button>
-              </div>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 

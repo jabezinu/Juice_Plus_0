@@ -195,7 +195,7 @@ const Home = () => {
 
           {/* CTA Buttons with Natural Design */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link to="/">
+            <Link to="/menu">
               <button className="group relative overflow-hidden bg-gradient-to-r from-amber-600 to-orange-600 text-white px-8 py-4 rounded-full font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
                 <span className="relative z-10 flex items-center justify-center space-x-2">
                   <Coffee className="h-5 w-5" />
