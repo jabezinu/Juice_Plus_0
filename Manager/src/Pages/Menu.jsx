@@ -1,21 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Plus, Edit, Trash2, Eye, Loader2, X, Check, Star, StarHalf, ChevronLeft, ChevronRight, Lock, LogOut, Settings } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, Loader2, X, Check, Star, StarHalf, ChevronLeft, ChevronRight } from 'lucide-react'
 import useMenuStore from '../stores/menuStore'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
-
-// Add at the top of your component
-const DEFAULT_USER = 'admin'
-const DEFAULT_PASS = 'admin123' // Default password for first time
-
-// Utility: Hash a string using SHA-256
-async function hashString(str) {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(str)
-  const hashBuffer = await window.crypto.subtle.digest('SHA-256', data)
-  return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('')
-}
 
 const Menu = () => {
   // Zustand store hooks
@@ -52,36 +40,10 @@ const Menu = () => {
   const [detailItem, setDetailItem] = useState(null)
   const [detailRating, setDetailRating] = useState({ count: 0, avg: 0 })
   const [detailLoading, setDetailLoading] = useState(false)
-  // --- Auth State ---
-  const [auth, setAuth] = useState(false)
-  const [showLogin, setShowLogin] = useState(false)
-  const [loginForm, setLoginForm] = useState({ name: '', password: '' })
-  const [loginError, setLoginError] = useState('')
-  const [showChangePass, setShowChangePass] = useState(false)
-  const [changePassForm, setChangePassForm] = useState({ oldPassword: '', newPassword: '', confirm: '' })
-  const [changePassMsg, setChangePassMsg] = useState('')
 
   useEffect(() => {
     fetchCategoriesAndMenus()
     // eslint-disable-next-line
-  }, [])
-
-  // On mount, check if password exists, else set default
-  useEffect(() => {
-    (async () => {
-      if (!localStorage.getItem('managerUser')) {
-        localStorage.setItem('managerUser', DEFAULT_USER)
-      }
-      if (!localStorage.getItem('managerPass')) {
-        const hash = await hashString(DEFAULT_PASS)
-        localStorage.setItem('managerPass', hash)
-      }
-      if (!sessionStorage.getItem('managerAuth')) {
-        setShowLogin(true)
-      } else {
-        setAuth(true)
-      }
-    })()
   }, [])
 
   // Category CRUD handlers
@@ -223,58 +185,6 @@ const Menu = () => {
     setDetailRating({ count: 0, avg: 0 })
   }
 
-  // Login handler
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    setLoginError('')
-    const storedUser = localStorage.getItem('managerUser')
-    const storedPass = localStorage.getItem('managerPass')
-    const inputHash = await hashString(loginForm.password)
-    if (
-      loginForm.name === storedUser &&
-      inputHash === storedPass
-    ) {
-      setAuth(true)
-      setShowLogin(false)
-      sessionStorage.setItem('managerAuth', '1')
-      setLoginForm({ name: '', password: '' })
-    } else {
-      setLoginError('Invalid name or password')
-    }
-  }
-
-  // Logout
-  const handleLogout = () => {
-    setAuth(false)
-    sessionStorage.removeItem('managerAuth')
-    setShowLogin(true)
-  }
-
-  // Change password
-  const handleChangePass = async (e) => {
-    e.preventDefault()
-    setChangePassMsg('')
-    const storedPass = localStorage.getItem('managerPass')
-    const oldHash = await hashString(changePassForm.oldPassword)
-    if (oldHash !== storedPass) {
-      setChangePassMsg('Old password is incorrect')
-      return
-    }
-    if (changePassForm.newPassword.length < 5) {
-      setChangePassMsg('New password must be at least 5 characters')
-      return
-    }
-    if (changePassForm.newPassword !== changePassForm.confirm) {
-      setChangePassMsg('Passwords do not match')
-      return
-    }
-    const newHash = await hashString(changePassForm.newPassword)
-    localStorage.setItem('managerPass', newHash)
-    setChangePassMsg('Password changed successfully!')
-    setTimeout(() => setShowChangePass(false), 1200)
-    setChangePassForm({ oldPassword: '', newPassword: '', confirm: '' })
-  }
-
   if (loading) return (
     <div className="flex items-center justify-center min-h-screen">
       <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin text-pink-600" />
@@ -296,72 +206,8 @@ const Menu = () => {
     </div>
   )
 
-  // If not authenticated, show login modal only
-  if (!auth) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        {showLogin && (
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-xs">
-            <div className="flex justify-center mb-4">
-              <Lock className="h-8 w-8 text-pink-600" />
-            </div>
-            <h2 className="text-lg font-bold text-center mb-2">Manager Login</h2>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  autoComplete="username"
-                  value={loginForm.name}
-                  onChange={e => setLoginForm(f => ({ ...f, name: e.target.value }))}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-pink-500 focus:border-pink-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  autoComplete="current-password"
-                  value={loginForm.password}
-                  onChange={e => setLoginForm(f => ({ ...f, password: e.target.value }))}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-pink-500 focus:border-pink-500"
-                  required
-                />
-              </div>
-              {loginError && <div className="text-red-500 text-xs">{loginError}</div>}
-              <button
-                type="submit"
-                className="w-full bg-pink-600 text-white py-2 rounded-md font-semibold hover:bg-pink-700 transition"
-              >
-                Login
-              </button>
-            </form>
-          </div>
-        )}
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 lg:px-8">
-      {/* Top bar for settings/logout */}
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={() => setShowChangePass(true)}
-          className="inline-flex items-center px-3 py-2 mr-2 border border-gray-300 text-sm rounded-md text-gray-700 bg-white hover:bg-gray-50"
-        >
-          <Settings className="h-4 w-4 mr-1" /> Change Password
-        </button>
-        <button
-          onClick={handleLogout}
-          className="inline-flex items-center px-3 py-2 border border-red-300 text-sm rounded-md text-red-600 bg-white hover:bg-red-50"
-        >
-          <LogOut className="h-4 w-4 mr-1" /> Logout
-        </button>
-      </div>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8">
           <div>
@@ -982,65 +828,6 @@ const Menu = () => {
       {menuActionMsg && (
         <div className="fixed bottom-4 right-4 bg-green-100 text-green-700 px-3 py-2 sm:px-4 sm:py-2 rounded shadow-lg z-50 text-sm">
           {menuActionMsg}
-        </div>
-      )}
-
-      {/* Change Password Modal */}
-      {showChangePass && (
-        <div className="fixed z-20 inset-0 overflow-y-auto" aria-labelledby="change-pass-title" role="dialog" aria-modal="true">
-          <div className="flex items-center justify-center min-h-screen px-4">
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75" aria-hidden="true" onClick={() => setShowChangePass(false)}></div>
-            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm z-30 relative">
-              <button
-                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-                onClick={() => setShowChangePass(false)}
-              >
-                <X className="h-5 w-5" />
-              </button>
-              <h3 className="text-lg font-bold mb-4" id="change-pass-title">Change Password</h3>
-              <form onSubmit={handleChangePass} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Old Password</label>
-                  <input
-                    type="password"
-                    value={changePassForm.oldPassword}
-                    onChange={e => setChangePassForm(f => ({ ...f, oldPassword: e.target.value }))}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-pink-500 focus:border-pink-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">New Password</label>
-                  <input
-                    type="password"
-                    value={changePassForm.newPassword}
-                    onChange={e => setChangePassForm(f => ({ ...f, newPassword: e.target.value }))}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-pink-500 focus:border-pink-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Confirm New Password</label>
-                  <input
-                    type="password"
-                    value={changePassForm.confirm}
-                    onChange={e => setChangePassForm(f => ({ ...f, confirm: e.target.value }))}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-pink-500 focus:border-pink-500"
-                    required
-                  />
-                </div>
-                {changePassMsg && (
-                  <div className={`text-xs ${changePassMsg.includes('success') ? 'text-green-600' : 'text-red-500'}`}>{changePassMsg}</div>
-                )}
-                <button
-                  type="submit"
-                  className="w-full bg-pink-600 text-white py-2 rounded-md font-semibold hover:bg-pink-700 transition"
-                >
-                  Change Password
-                </button>
-              </form>
-            </div>
-          </div>
         </div>
       )}
     </div>
