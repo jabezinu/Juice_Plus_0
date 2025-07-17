@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import axios from 'axios'
+import useAuthStore from './authStore'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
@@ -34,7 +35,10 @@ export const useEmployeeStore = create((set, get) => ({
   fetchEmployees: async () => {
     set({ loading: true })
     try {
-      const res = await axios.get(`${BACKEND_URL}/employees/`)
+      const { token } = useAuthStore.getState();
+      const res = await axios.get(`${BACKEND_URL}/employees/`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      })
       set({ employees: res.data, error: null })
     } catch {
       set({ error: 'Failed to fetch employees' })
@@ -70,17 +74,24 @@ export const useEmployeeStore = create((set, get) => ({
     set({ actionLoading: true })
     const { form, editId, fetchEmployees, setShowForm } = get()
     try {
+      const { token } = useAuthStore.getState();
       const formData = new FormData()
       Object.entries(form).forEach(([key, value]) => {
         if (value !== undefined && value !== null) formData.append(key, value)
       })
       if (editId) {
         await axios.put(`${BACKEND_URL}/employees/${editId}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
         })
       } else {
         await axios.post(`${BACKEND_URL}/employees/`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
         })
       }
       setShowForm(false)
@@ -97,7 +108,10 @@ export const useEmployeeStore = create((set, get) => ({
     set({ actionLoading: true })
     const { fetchEmployees } = get()
     try {
-      await axios.delete(`${BACKEND_URL}/employees/${id}`)
+      const { token } = useAuthStore.getState();
+      await axios.delete(`${BACKEND_URL}/employees/${id}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      })
       fetchEmployees()
     } catch {
       alert('Failed to delete employee')

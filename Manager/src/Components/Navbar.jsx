@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Home, Users, AlertCircle, MessageSquare } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, Home, Users, AlertCircle, MessageSquare, LogOut } from 'lucide-react';
+import useAuthStore from '../stores/authStore';
 
 const Navbar = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { logout } = useAuthStore();
 
   const navItems = [
     { name: 'Menu', path: '/', icon: Home },
@@ -13,6 +16,11 @@ const Navbar = ({ children }) => {
     { name: 'Out of Stock', path: '/out-of-stock', icon: AlertCircle },
     { name: 'Comments', path: '/comment', icon: MessageSquare },
   ];
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -127,6 +135,16 @@ const Navbar = ({ children }) => {
                 </li>
               );
             })}
+            {/* Logout Button */}
+            <li className="mt-8">
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-red-600/80 transition-all duration-200"
+              >
+                <LogOut size={20} />
+                {!isCollapsed && <span className="font-medium">Logout</span>}
+              </button>
+            </li>
           </ul>
         </nav>
       </aside>
