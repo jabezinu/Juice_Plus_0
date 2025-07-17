@@ -5,6 +5,7 @@ import menuRoutes from './routes/menuRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import ratingRoutes from './routes/ratingRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
+import userRoutes from './routes/userRoutes.js'
 import mongoose from 'mongoose';
 // import connectDB from './config/db.js';
 import cors from 'cors';
@@ -26,6 +27,7 @@ app.use('/api/menus', menuRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/rating', ratingRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/users', userRoutes);
 
 // MongoDB connection
 // const PORT = process.env.PORT || 5000;
