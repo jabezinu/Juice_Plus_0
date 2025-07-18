@@ -35,6 +35,23 @@ const useAuthStore = create((set) => ({
     localStorage.removeItem('user');
     set({ token: '', user: null });
   },
+
+  changePassword: async (oldPassword, newPassword) => {
+    set({ loading: true, error: '' });
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${BACKEND_URL}/users/change-password`,
+        { oldPassword, newPassword },
+        { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+      );
+      set({ loading: false, error: '' });
+      return true;
+    } catch (err) {
+      set({ error: err.response?.data?.message || 'Password change failed', loading: false });
+      return false;
+    }
+  },
 }));
 
 export default useAuthStore; 

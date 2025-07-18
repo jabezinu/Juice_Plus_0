@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Home, Users, AlertCircle, MessageSquare, LogOut } from 'lucide-react';
+import { Menu, X, Home, Users, AlertCircle, MessageSquare, LogOut, Key } from 'lucide-react';
 import useAuthStore from '../stores/authStore';
 
 const Navbar = ({ children }) => {
@@ -15,6 +15,7 @@ const Navbar = ({ children }) => {
     { name: 'Employee', path: '/employee', icon: Users },
     { name: 'Out of Stock', path: '/out-of-stock', icon: AlertCircle },
     { name: 'Comments', path: '/comment', icon: MessageSquare },
+    { name: 'Change Password', path: '/change-password', icon: Key },
   ];
 
   const handleLogout = () => {

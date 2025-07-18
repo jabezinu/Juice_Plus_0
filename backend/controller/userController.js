@@ -51,3 +51,25 @@ export const currentUser = asyncHandler(async (req, res) => {
     }
     res.json({ user });
 });
+
+
+export const changePassword = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+        return res.status(400).json({ message: 'Old and new password are required.' });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+        return res.status(404).json({ message: 'User not found.' });
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+        return res.status(401).json({ message: 'Old password is incorrect.' });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    user.password = hashedPassword;
+    await user.save();
+    res.json({ message: 'Password changed successfully.' });
+});

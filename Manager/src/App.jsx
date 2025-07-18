@@ -7,6 +7,7 @@ import OutOfStock from './Pages/OutOfStock';
 import Comment from './Pages/Comment';
 import Login from './Pages/Login';
 import useAuthStore from './stores/authStore';
+import ChangePassword from './Pages/ChangePassword';
 
 const ProtectedRoute = ({ children }) => {
   const { token } = useAuthStore();
@@ -31,6 +32,7 @@ const App = () => {
                 <Route path="/employee" element={<Employee />} />
                 <Route path="/out-of-stock" element={<OutOfStock />} />
                 <Route path="/comment" element={<Comment />} />
+                <Route path="/change-password" element={<ChangePassword />} />
               </Routes>
             </Navbar>
           </ProtectedRoute>
