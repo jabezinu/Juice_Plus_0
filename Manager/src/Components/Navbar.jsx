@@ -8,6 +8,7 @@ const Navbar = ({ children }) => {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const { logout } = useAuthStore();
 
   const navItems = [
@@ -139,7 +140,7 @@ const Navbar = ({ children }) => {
             {/* Logout Button */}
             <li className="mt-8">
               <button
-                onClick={handleLogout}
+                onClick={() => setShowLogoutModal(true)}
                 className="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-red-600/80 transition-all duration-200"
               >
                 <LogOut size={20} />
@@ -160,6 +161,43 @@ const Navbar = ({ children }) => {
       >
         {children}
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-xs sm:max-w-sm relative">
+            <button
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-lg"
+              onClick={() => setShowLogoutModal(false)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <div className="flex flex-col items-center">
+              <LogOut size={36} className="text-red-600 mb-2" />
+              <h2 className="text-lg font-bold mb-2 text-gray-800">Confirm Logout</h2>
+              <p className="text-gray-600 mb-4 text-center">Are you sure you want to log out?</p>
+              <div className="flex space-x-3 w-full">
+                <button
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded font-semibold transition"
+                  onClick={() => {
+                    setShowLogoutModal(false);
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </button>
+                <button
+                  className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded font-semibold transition"
+                  onClick={() => setShowLogoutModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
