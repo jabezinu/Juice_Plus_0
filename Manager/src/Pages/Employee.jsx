@@ -79,7 +79,7 @@ const Employee = () => {
                         {emp.status}
                       </span>
                     </div>
-                    <div>Salary: ${emp.salary}</div>
+                    <div>Salary: {emp.salary} Birr</div>
                     <div>
                       Hired:{' '}
                       {emp.dateHired ? new Date(emp.dateHired).toLocaleDateString() : ''}

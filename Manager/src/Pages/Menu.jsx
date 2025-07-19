@@ -32,7 +32,7 @@ const Menu = () => {
   // Menu CRUD UI state
   const [showMenuModal, setShowMenuModal] = useState(false)
   const [menuModalType, setMenuModalType] = useState('add') // 'add' or 'edit'
-  const [menuForm, setMenuForm] = useState({ name: '', price: '', ingredients: '', badge: '', image: '', _id: null, category: '', outOfStock: false, imageFile: null })
+  const [menuForm, setMenuForm] = useState({ name: '', price: '', ingredients: '', badge: '', image: '', _id: null, category: '', outOfStock: false, imageFile: null, removeImage: false })
   const [menuActionLoading, setMenuActionLoading] = useState(false)
   const [menuActionMsg, setMenuActionMsg] = useState('')
   // Detail UI state
@@ -81,7 +81,7 @@ const Menu = () => {
   // Menu CRUD handlers
   const openMenuModal = (type, categoryId, item = { name: '', price: '', ingredients: '', badge: '', image: '', _id: null, outOfStock: false, imageFile: null }) => {
     setMenuModalType(type)
-    setMenuForm({ ...item, category: categoryId, outOfStock: item.outOfStock ?? false })
+    setMenuForm({ ...item, category: categoryId, outOfStock: item.outOfStock ?? false, removeImage: false })
     setShowMenuModal(true)
   }
   const closeMenuModal = () => {
@@ -90,7 +90,7 @@ const Menu = () => {
     if (menuForm.image && menuForm.image.startsWith('blob:')) {
       URL.revokeObjectURL(menuForm.image)
     }
-    setMenuForm({ name: '', price: '', ingredients: '', badge: '', image: '', _id: null, category: '', outOfStock: false, imageFile: null })
+    setMenuForm({ name: '', price: '', ingredients: '', badge: '', image: '', _id: null, category: '', outOfStock: false, imageFile: null, removeImage: false })
   }
   const handleMenuFormChange = e => {
     const { name, value, type, checked, files } = e.target
@@ -127,7 +127,9 @@ const Menu = () => {
       formData.append('badge', menuForm.badge)
       formData.append('outOfStock', !!menuForm.outOfStock)
       formData.append('category', menuForm.category)
-      if (menuForm.imageFile) {
+      if (menuForm.removeImage) {
+        formData.append('image', '')
+      } else if (menuForm.imageFile) {
         formData.append('image', menuForm.imageFile)
       } else if (menuForm.image && !menuForm.image.startsWith('blob:')) {
         formData.append('imageUrl', menuForm.image)
@@ -630,7 +632,7 @@ const Menu = () => {
                                   if (menuForm.image.startsWith('blob:')) {
                                     URL.revokeObjectURL(menuForm.image)
                                   }
-                                  setMenuForm(prev => ({ ...prev, image: '', imageFile: null }))
+                                  setMenuForm(prev => ({ ...prev, image: '', imageFile: null, removeImage: true }))
                                 }}
                                 className="ml-2 text-red-500 hover:text-red-700 text-sm"
                               >

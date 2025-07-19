@@ -68,22 +68,22 @@ const Home = () => {
       text: "The aroma alone transported me to the Ethiopian highlands. This coffee is pure poetry in a cup.",
       title: "Coffee Enthusiast",
       rating: 5,
-      author: "Liya T.",
+      author: "Adugna T.",
       location: "Addis Ababa, Ethiopia",
     },
     {
       text: "I've traveled the world for coffee, but nothing compares to Akaka's incredible depth of flavor.",
       title: "Travel Blogger",
       rating: 5,
-      author: "Jonas M.",
-      location: "Berlin, Germany",
+      author: "Helen M.",
+      location: "Hawassa, Ethiopia",
     },
     {
       text: "As a barista, I can confidently say this is the finest coffee I've ever worked with. Absolutely exceptional.",
       title: "Master Barista",
       rating: 5,
-      author: "Sara K.",
-      location: "London, UK",
+      author: "Kenean K.",
+      location: "Addis Ababa, Ethiopia",
     }
   ];
 

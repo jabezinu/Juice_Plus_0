@@ -19,7 +19,12 @@ export const updateMenu = asyncHandler(async (req, res) => {
         });
     }
     const updateData = { ...req.body };
-    if (imageUrl) updateData.image = imageUrl;
+    // If image is explicitly set to empty string, remove image
+    if (req.body.image === '') {
+        updateData.image = '';
+    } else if (imageUrl) {
+        updateData.image = imageUrl;
+    }
     const menu = await Menu.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
     if (!menu) return res.status(404).json({ message: 'Menu item not found' });
     res.json(menu);

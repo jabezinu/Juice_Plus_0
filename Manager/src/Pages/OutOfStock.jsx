@@ -158,7 +158,6 @@ const OutOfStock = () => {
                   onChange={handleEditFormChange}
                   placeholder="Ingredients"
                   className="border rounded px-3 py-2 col-span-1 sm:col-span-2 text-sm sm:text-base focus:outline-pink-400"
-                  required
                 />
               </div>
               <button type="submit" disabled={editLoading} className="w-full mt-4 bg-pink-600 hover:bg-pink-700 text-white py-2 rounded font-semibold transition text-sm sm:text-base">
