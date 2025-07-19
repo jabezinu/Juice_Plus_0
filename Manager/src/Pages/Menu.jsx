@@ -210,9 +210,9 @@ const Menu = () => {
           </button>
         </div>
         {/* Category Tabs */}
-        <div className="mb-6 sm:mb-8 sticky top-0 z-20 bg-gradient-to-br from-gray-50 via-white to-pink-50 pt-2 pb-2">
+        <div className="mb-6 sm:mb-8 bg-gradient-to-br from-gray-50 via-white to-pink-50 pt-2 pb-2">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex flex-wrap gap-2 sm:gap-4 pb-2">
+            <nav className="-mb-px flex flex-nowrap gap-2 sm:gap-4 pb-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               {categories.map((cat) => (
                 <button
                   key={cat._id}
