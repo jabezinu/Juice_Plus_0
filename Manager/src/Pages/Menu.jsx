@@ -209,8 +209,8 @@ const Menu = () => {
   )
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 via-white to-pink-50 px-4 py-6 sm:px-6 lg:px-8 transition-colors duration-500">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 via-white to-pink-50 px-4 py-6 sm:px-6 lg:px-8 transition-colors duration-500 flex flex-col">
+      <div className="max-w-7xl mx-auto flex flex-col flex-1 min-h-[70vh]">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Menu Management</h1>
@@ -225,7 +225,7 @@ const Menu = () => {
           </button>
         </div>
         {/* Category Tabs */}
-        <div className="mb-6 sm:mb-8">
+        <div className="mb-6 sm:mb-8 sticky top-0 z-20 bg-gradient-to-br from-gray-50 via-white to-pink-50 pt-2 pb-2">
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-2 sm:space-x-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               {categories.map((cat) => (
@@ -233,10 +233,10 @@ const Menu = () => {
                   key={cat._id}
                   onClick={() => setSelectedCategory(cat._id)}
                   className={`whitespace-nowrap py-3 px-4 sm:py-4 sm:px-6 border-b-2 font-semibold text-xs sm:text-sm rounded-t-lg transition-all duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 focus:z-10 \
-            ${selectedCategory === cat._id
-              ? 'border-pink-500 text-pink-700 bg-white shadow-md'
-              : 'border-transparent text-gray-500 hover:text-pink-600 hover:border-pink-200 bg-gray-50'}
-          `}
+                    ${selectedCategory === cat._id
+                      ? 'border-pink-500 text-pink-700 bg-white shadow-md'
+                      : 'border-transparent text-gray-500 hover:text-pink-600 hover:border-pink-200 bg-gray-50'}
+                  `}
                   style={{ marginRight: '0.5rem' }}
                 >
                   {cat.name}
@@ -245,178 +245,179 @@ const Menu = () => {
             </nav>
           </div>
         </div>
-
-        {/* Status Messages */}
-        {catActionMsg && (
-          <div className="mb-6">
-            <div className="rounded-md bg-green-50 p-3 sm:p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <Check className="h-5 w-5 text-green-400" />
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-green-800">{catActionMsg}</p>
+        {/* Main Content Scrollable Area */}
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          {/* Status Messages */}
+          {catActionMsg && (
+            <div className="mb-6">
+              <div className="rounded-md bg-green-50 p-3 sm:p-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <Check className="h-5 w-5 text-green-400" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-green-800">{catActionMsg}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Category Actions */}
-        {selectedCategory && (
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-0">
-              {categories.find(cat => cat._id === selectedCategory)?.name || 'Select a Category'}
-            </h2>
-            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
-              <div className="flex flex-row space-x-2 bg-white rounded-lg shadow-md p-2 sm:p-3 border border-gray-200">
-                <button
-                  onClick={() => openCatModal('add')}
-                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Category
-                </button>
-                <button
-                  onClick={() => openCatModal('edit', categories.find(c => c._id === selectedCategory))}
-                  className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Category
-                </button>
-                <button
-                  onClick={async () => {
-                    if (window.confirm('Are you sure you want to delete this category?')) {
-                      setCatActionLoading(true)
-                      try {
-                        await deleteCategory(selectedCategory)
-                        setCatActionMsg('Category deleted!')
-                      } catch {
-                        setCatActionMsg('Error deleting category')
-                      } finally {
-                        setCatActionLoading(false)
-                        setTimeout(() => setCatActionMsg(''), 1500)
-                      }
-                    }
-                  }}
-                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-semibold rounded-lg shadow-sm text-white bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Delete Category
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Menu Items Grid */}
-        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-          {selectedCategory && (
-            <div className="flex justify-between items-center px-4 pt-4 pb-2 sm:px-6">
-              <h3 className="text-lg sm:text-xl font-bold text-gray-900">Menu Items</h3>
-              <button
-                type="button"
-                onClick={() => openMenuModal('add', selectedCategory)}
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-base font-semibold rounded-lg text-white bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
-                style={{ boxShadow: '0 4px 14px 0 rgba(236, 72, 153, 0.15)' }}
-              >
-                <Plus className="-ml-1 mr-2 h-5 w-5" />
-                Add Menu Item
-              </button>
             </div>
           )}
-          {selectedCategory && menuItems[selectedCategory] && menuItems[selectedCategory].length > 0 ? (
-            <ul className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 p-4 sm:p-6">
-              {menuItems[selectedCategory].map((item) => (
-                <li key={item._id} className="col-span-1 bg-white rounded-2xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 divide-y divide-gray-200 border border-gray-100">
-                  <div className="w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 space-y-4 sm:space-y-0 sm:space-x-6">
-                    <div className="flex-1 truncate">
-                      <div className="flex items-center space-x-3">
-                        <h3 className="text-gray-900 text-base sm:text-lg font-semibold truncate">{item.name}</h3>
-                        {item.outOfStock && (
-                          <span className="flex-shrink-0 inline-block px-2 py-0.5 text-yellow-800 text-xs font-medium bg-yellow-100 rounded-full">
-                            Out of Stock
+          {/* Category Actions */}
+          {selectedCategory && (
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-0">
+                {categories.find(cat => cat._id === selectedCategory)?.name || 'Select a Category'}
+              </h2>
+              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
+                <div className="flex flex-row space-x-2 bg-white rounded-lg shadow-md p-2 sm:p-3 border border-gray-200">
+                  <button
+                    onClick={() => openCatModal('add')}
+                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Category
+                  </button>
+                  <button
+                    onClick={() => openCatModal('edit', categories.find(c => c._id === selectedCategory))}
+                    className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Category
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (window.confirm('Are you sure you want to delete this category?')) {
+                        setCatActionLoading(true)
+                        try {
+                          await deleteCategory(selectedCategory)
+                          setCatActionMsg('Category deleted!')
+                        } catch {
+                          setCatActionMsg('Error deleting category')
+                        } finally {
+                          setCatActionLoading(false)
+                          setTimeout(() => setCatActionMsg(''), 1500)
+                        }
+                      }
+                    }}
+                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-semibold rounded-lg shadow-sm text-white bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Category
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Menu Items Grid */}
+          <div className="bg-white shadow overflow-hidden sm:rounded-lg flex-1 flex flex-col">
+            {selectedCategory && (
+              <div className="flex justify-between items-center px-4 pt-4 pb-2 sm:px-6">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900">Menu Items</h3>
+                <button
+                  type="button"
+                  onClick={() => openMenuModal('add', selectedCategory)}
+                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-base font-semibold rounded-lg text-white bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
+                  style={{ boxShadow: '0 4px 14px 0 rgba(236, 72, 153, 0.15)' }}
+                >
+                  <Plus className="-ml-1 mr-2 h-5 w-5" />
+                  Add Menu Item
+                </button>
+              </div>
+            )}
+            {selectedCategory && menuItems[selectedCategory] && menuItems[selectedCategory].length > 0 ? (
+              <ul className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 p-4 sm:p-6">
+                {menuItems[selectedCategory].map((item) => (
+                  <li key={item._id} className="col-span-1 bg-white rounded-2xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 divide-y divide-gray-200 border border-gray-100">
+                    <div className="w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 space-y-4 sm:space-y-0 sm:space-x-6">
+                      <div className="flex-1 truncate">
+                        <div className="flex items-center space-x-3">
+                          <h3 className="text-gray-900 text-base sm:text-lg font-semibold truncate">{item.name}</h3>
+                          {item.outOfStock && (
+                            <span className="flex-shrink-0 inline-block px-2 py-0.5 text-yellow-800 text-xs font-medium bg-yellow-100 rounded-full">
+                              Out of Stock
+                            </span>
+                          )}
+                        </div>
+                        <p className="mt-1 text-gray-500 text-xs sm:text-sm line-clamp-2">{item.ingredients}</p>
+                        <p className="mt-2 text-lg sm:text-xl font-bold text-pink-600">{item.price} Birr</p>
+                        {item.badge && (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 text-pink-800 mt-2">
+                            {item.badge}
                           </span>
                         )}
                       </div>
-                      <p className="mt-1 text-gray-500 text-xs sm:text-sm line-clamp-2">{item.ingredients}</p>
-                      <p className="mt-2 text-lg sm:text-xl font-bold text-pink-600">{item.price} Birr</p>
-                      {item.badge && (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 text-pink-800 mt-2">
-                          {item.badge}
-                        </span>
+                      {item.image ? (
+                        <img
+                          className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-300 rounded-full flex-shrink-0 object-cover border border-gray-200"
+                          src={item.image}
+                          alt={item.name}
+                        />
+                      ) : (
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center text-gray-400 border border-gray-200">
+                          <svg className="h-10 w-10 sm:h-12 sm:w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
                       )}
                     </div>
-                    {item.image ? (
-                      <img
-                        className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-300 rounded-full flex-shrink-0 object-cover border border-gray-200"
-                        src={item.image}
-                        alt={item.name}
-                      />
-                    ) : (
-                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center text-gray-400 border border-gray-200">
-                        <svg className="h-10 w-10 sm:h-12 sm:w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <div className="-mt-px flex divide-x divide-gray-200">
-                      <div className="w-0 flex-1 flex">
-                        <button
-                          onClick={() => openDetailModal(item)}
-                          className="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-3 sm:py-4 text-xs sm:text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500"
-                        >
-                          <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
-                          <span className="ml-2 sm:ml-3">View</span>
-                        </button>
-                      </div>
-                      <div className="-ml-px w-0 flex-1 flex">
-                        <button
-                          onClick={() => openMenuModal('edit', selectedCategory, item)}
-                          className="relative w-0 flex-1 inline-flex items-center justify-center py-3 sm:py-4 text-xs sm:text-sm text-gray-700 font-medium border border-transparent hover:text-gray-500"
-                        >
-                          <Edit className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
-                          <span className="ml-2 sm:ml-3">Edit</span>
-                        </button>
-                      </div>
-                      <div className="-ml-px w-0 flex-1 flex">
-                        <button
-                          onClick={() => handleMenuDelete(item._id, selectedCategory)}
-                          className="relative w-0 flex-1 inline-flex items-center justify-center py-3 sm:py-4 text-xs sm:text-sm text-red-600 font-medium border border-transparent rounded-br-lg hover:text-red-500"
-                        >
-                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />
-                          <span className="ml-2 sm:ml-3">Delete</span>
-                        </button>
+                    <div>
+                      <div className="-mt-px flex divide-x divide-gray-200">
+                        <div className="w-0 flex-1 flex">
+                          <button
+                            onClick={() => openDetailModal(item)}
+                            className="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-3 sm:py-4 text-xs sm:text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500"
+                          >
+                            <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                            <span className="ml-2 sm:ml-3">View</span>
+                          </button>
+                        </div>
+                        <div className="-ml-px w-0 flex-1 flex">
+                          <button
+                            onClick={() => openMenuModal('edit', selectedCategory, item)}
+                            className="relative w-0 flex-1 inline-flex items-center justify-center py-3 sm:py-4 text-xs sm:text-sm text-gray-700 font-medium border border-transparent hover:text-gray-500"
+                          >
+                            <Edit className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                            <span className="ml-2 sm:ml-3">Edit</span>
+                          </button>
+                        </div>
+                        <div className="-ml-px w-0 flex-1 flex">
+                          <button
+                            onClick={() => handleMenuDelete(item._id, selectedCategory)}
+                            className="relative w-0 flex-1 inline-flex items-center justify-center py-3 sm:py-4 text-xs sm:text-sm text-red-600 font-medium border border-transparent rounded-br-lg hover:text-red-500"
+                          >
+                            <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />
+                            <span className="ml-2 sm:ml-3">Delete</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : selectedCategory ? (
-            <div className="text-center py-8 sm:py-12">
-              <svg
-                className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
-                />
-              </svg>
-              <h3 className="mt-2 text-sm sm:text-base font-medium text-gray-900">No menu items</h3>
-              <p className="mt-1 text-xs sm:text-sm text-gray-500">
-                Get started by creating a new menu item.
-              </p>
-            </div>
-          ) : null}
+                  </li>
+                ))}
+              </ul>
+            ) : selectedCategory ? (
+              <div className="text-center py-8 sm:py-12">
+                <svg
+                  className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+                  />
+                </svg>
+                <h3 className="mt-2 text-sm sm:text-base font-medium text-gray-900">No menu items</h3>
+                <p className="mt-1 text-xs sm:text-sm text-gray-500">
+                  Get started by creating a new menu item.
+                </p>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
 
