@@ -209,7 +209,7 @@ const Menu = () => {
   )
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 lg:px-8">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 via-white to-pink-50 px-4 py-6 sm:px-6 lg:px-8 transition-colors duration-500">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8">
           <div>
@@ -218,7 +218,7 @@ const Menu = () => {
           </div>
           <button
             onClick={() => openCatModal('add')}
-            className="mt-4 sm:mt-0 inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+            className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-lg shadow-sm text-white bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200"
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Category
@@ -232,11 +232,12 @@ const Menu = () => {
                 <button
                   key={cat._id}
                   onClick={() => setSelectedCategory(cat._id)}
-                  className={`whitespace-nowrap py-3 px-3 sm:py-4 sm:px-4 border-b-2 font-medium text-xs sm:text-sm ${
-                    selectedCategory === cat._id
-                      ? 'border-pink-500 text-pink-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                  className={`whitespace-nowrap py-3 px-4 sm:py-4 sm:px-6 border-b-2 font-semibold text-xs sm:text-sm rounded-t-lg transition-all duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 focus:z-10 \
+            ${selectedCategory === cat._id
+              ? 'border-pink-500 text-pink-700 bg-white shadow-md'
+              : 'border-transparent text-gray-500 hover:text-pink-600 hover:border-pink-200 bg-gray-50'}
+          `}
+                  style={{ marginRight: '0.5rem' }}
                 >
                   {cat.name}
                 </button>
@@ -298,7 +299,7 @@ const Menu = () => {
                       }
                     }
                   }}
-                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
+                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-semibold rounded-lg shadow-sm text-white bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete Category
@@ -325,13 +326,13 @@ const Menu = () => {
             </div>
           )}
           {selectedCategory && menuItems[selectedCategory] && menuItems[selectedCategory].length > 0 ? (
-            <ul className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4 sm:p-6">
+            <ul className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 p-4 sm:p-6">
               {menuItems[selectedCategory].map((item) => (
-                <li key={item._id} className="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200 hover:shadow-lg transition-shadow duration-200">
+                <li key={item._id} className="col-span-1 bg-white rounded-2xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 divide-y divide-gray-200 border border-gray-100">
                   <div className="w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 space-y-4 sm:space-y-0 sm:space-x-6">
                     <div className="flex-1 truncate">
                       <div className="flex items-center space-x-3">
-                        <h3 className="text-gray-900 text-sm sm:text-base font-medium truncate">{item.name}</h3>
+                        <h3 className="text-gray-900 text-base sm:text-lg font-semibold truncate">{item.name}</h3>
                         {item.outOfStock && (
                           <span className="flex-shrink-0 inline-block px-2 py-0.5 text-yellow-800 text-xs font-medium bg-yellow-100 rounded-full">
                             Out of Stock
@@ -339,7 +340,7 @@ const Menu = () => {
                         )}
                       </div>
                       <p className="mt-1 text-gray-500 text-xs sm:text-sm line-clamp-2">{item.ingredients}</p>
-                      <p className="mt-2 text-base sm:text-lg font-semibold text-pink-600">{item.price} Birr</p>
+                      <p className="mt-2 text-lg sm:text-xl font-bold text-pink-600">{item.price} Birr</p>
                       {item.badge && (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 text-pink-800 mt-2">
                           {item.badge}
@@ -348,13 +349,13 @@ const Menu = () => {
                     </div>
                     {item.image ? (
                       <img
-                        className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-300 rounded-full flex-shrink-0 object-cover"
+                        className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-300 rounded-full flex-shrink-0 object-cover border border-gray-200"
                         src={item.image}
                         alt={item.name}
                       />
                     ) : (
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center text-gray-400">
-                        <svg className="h-8 w-8 sm:h-10 sm:w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center text-gray-400 border border-gray-200">
+                        <svg className="h-10 w-10 sm:h-12 sm:w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </div>
