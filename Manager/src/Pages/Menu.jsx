@@ -209,9 +209,9 @@ const Menu = () => {
   )
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 via-white to-pink-50 px-4 py-6 sm:px-6 lg:px-8 transition-colors duration-500 flex flex-col">
-      <div className="max-w-7xl mx-auto flex flex-col flex-1 min-h-[70vh]">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8">
+    <div className="min-h-screen w-full max-w-full bg-gradient-to-br from-gray-50 via-white to-pink-50 px-2 sm:px-4 py-6 sm:px-6 lg:px-8 transition-colors duration-500 flex flex-col box-border">
+      <div className="max-w-7xl w-full mx-auto flex flex-col flex-1 min-h-[70vh]">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 w-full">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Menu Management</h1>
             <p className="mt-1 text-sm sm:text-base text-gray-500">Manage your menu categories and items</p>
@@ -225,9 +225,9 @@ const Menu = () => {
           </button>
         </div>
         {/* Category Tabs */}
-        <div className="mb-6 sm:mb-8 sticky top-0 z-20 bg-gradient-to-br from-gray-50 via-white to-pink-50 pt-2 pb-2">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-2 sm:space-x-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <div className="mb-6 sm:mb-8 sticky top-0 z-20 bg-gradient-to-br from-gray-50 via-white to-pink-50 pt-2 pb-2 w-full">
+          <div className="border-b border-gray-200 w-full overflow-x-auto">
+            <nav className="-mb-px flex space-x-2 sm:space-x-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 w-full max-w-full">
               {categories.map((cat) => (
                 <button
                   key={cat._id}
@@ -246,7 +246,7 @@ const Menu = () => {
           </div>
         </div>
         {/* Main Content Scrollable Area */}
-        <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto w-full max-w-full">
           {/* Status Messages */}
           {catActionMsg && (
             <div className="mb-6">
@@ -310,9 +310,9 @@ const Menu = () => {
           )}
 
           {/* Menu Items Grid */}
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg flex-1 flex flex-col">
+          <div className="bg-white shadow overflow-hidden sm:rounded-lg flex-1 flex flex-col w-full max-w-full">
             {selectedCategory && (
-              <div className="flex justify-between items-center px-4 pt-4 pb-2 sm:px-6">
+              <div className="flex flex-col sm:flex-row justify-between items-center px-2 sm:px-4 pt-4 pb-2 sm:px-6 w-full max-w-full overflow-x-auto">
                 <h3 className="text-lg sm:text-xl font-bold text-gray-900">Menu Items</h3>
                 <button
                   type="button"
@@ -326,9 +326,9 @@ const Menu = () => {
               </div>
             )}
             {selectedCategory && menuItems[selectedCategory] && menuItems[selectedCategory].length > 0 ? (
-              <ul className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 p-4 sm:p-6">
+              <ul className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 p-2 sm:p-4 md:p-6 w-full max-w-full">
                 {menuItems[selectedCategory].map((item) => (
-                  <li key={item._id} className="col-span-1 bg-white rounded-2xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 divide-y divide-gray-200 border border-gray-100">
+                  <li key={item._id} className="col-span-1 bg-white rounded-2xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 divide-y divide-gray-200 border border-gray-100 w-full max-w-full">
                     <div className="w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 space-y-4 sm:space-y-0 sm:space-x-6">
                       <div className="flex-1 truncate">
                         <div className="flex items-center space-x-3">
